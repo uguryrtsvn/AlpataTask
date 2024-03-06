@@ -12,8 +12,8 @@ namespace AlpataDAL.Repositories
     public class InventoryRepository : BaseRepository<Inventory>, IInventoryRepository
     {
         readonly AlpataDbContext _db;
-        public InventoryRepository(AlpataDbContext miraDBContext): base(miraDBContext) {
-            _db = miraDBContext;
+        public InventoryRepository(AlpataDbContext db): base(db) {
+            _db = db;
         } 
 
         public async Task<int> GetMeetingInventoryCount(Guid meetId)

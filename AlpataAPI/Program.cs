@@ -31,16 +31,15 @@ builder.Services.AddIdentityCore<AppUser>(config =>
     config.User.AllowedUserNameCharacters = "abcçdefgðhýijklmnoöpqrsþtuüvwxyzABCÇDEFGHIÝJKLMNOÖPQRSÞTUÜVWXYZ0123456789-._@+";
 }).AddEntityFrameworkStores<AlpataDbContext>()
 .AddTokenProvider<DataProtectorTokenProvider<AppUser>>(TokenOptions.DefaultProvider);
-
-
+ 
 #region Dependencies
 
 builder.Services.AddTransient<IAppUserRepository, AppUserRepository>();
 builder.Services.AddTransient<IInventoryRepository, InventoryRepository>(); 
+builder.Services.AddTransient<IMeetingRepository, MeetingRepository>(); 
 builder.Services.AddTransient<DbInitializer>();
 #endregion
-
-
+ 
 #region Cors
 builder.Services.AddCors(options =>
     options.AddDefaultPolicy(builder =>

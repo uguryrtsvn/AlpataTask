@@ -41,7 +41,24 @@ namespace AlpataDAL.Repositories
         {
             return await db.Set<T>().Where(expression).ToListAsync();
         }
-
+        public async Task<T?> GetAsync(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, Func<IQueryable<T>, IQueryable<T>>? selector = null, int skip = 0, bool ignoreQueryFilters = false)
+        {
+            IQueryable<T> query = db.Set<T>();
+            if (ignoreQueryFilters) query = query.IgnoreQueryFilters();
+            if (includes != null) query = includes(query);
+            if (filter != null) query = query.Where(filter);
+            if (selector != null) query = selector(query);
+            if (orderBy != null) query = orderBy(query);
+            if (skip > 0) query = query.Skip(skip);
+            return await query.FirstOrDefaultAsync();
+        }
+        public async Task<bool> AnyAsync(Expression<Func<T, bool>>? filter = null, bool ignoreQueryFilters = false)
+        {
+            IQueryable<T> query = db.Set<T>();
+            if (ignoreQueryFilters) query = query.IgnoreQueryFilters();
+            if (filter != null) query = query.Where(filter);
+            return await query.AnyAsync();
+        }
         public async Task<TResult> GetFilteredFirstOrDefault<TResult>(Expression<Func<T, TResult>> selector, Expression<Func<T, bool>> expression, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> includes = null)
         {
             IQueryable<T> query = db.Set<T>();
