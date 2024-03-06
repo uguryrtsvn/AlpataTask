@@ -1,14 +1,6 @@
-﻿ 
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using System.Reflection.Emit;
+﻿  
 using AlpataEntities.Entities.Concretes;
+using AlpataBLL.Utilities.Hashing;
 
 namespace AlpataDAL.SeedData
 {
@@ -21,22 +13,22 @@ namespace AlpataDAL.SeedData
                 // Veritabanında veri varsa seed işlemini atla
                 return;
             } 
-            context.SaveChanges();
-            var hasher = new PasswordHasher<AppUser>(); 
+            context.SaveChanges(); 
+            HashingHelper.CreatePassword("1234", out byte[] passwordHash, out byte[] passwordSalt);
             AppUser user = new AppUser
             {
                 Id = Guid.NewGuid(),
-                FirstName = "alpata",
-                LastName = "alpata",
+                Name = "alpata",
+                Surname = "alpata",
                 UserName = "alpata@alpata.com",
                 NormalizedUserName = "ALPATA@ALPATA.COM",
                 Email = "alpata@alpata.com",
                 NormalizedEmail = "ALPATA@ALPATA.COM",
                 EmailConfirmed = true, 
-                CreatedTime = DateTime.Now, 
-                PasswordHash = hasher.HashPassword(null, "alpata"), 
-                LockoutEnabled = false
-            };
+                CreatedTime = DateTime.Now,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt
+            }; 
             context.Set<AppUser>().Add(user);
             context.SaveChanges(); 
         }

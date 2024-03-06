@@ -1,11 +1,12 @@
 ﻿using AlpataEntities.Entities.Concretes;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace AlpataAPI.Utilities.Security.Jwt
+namespace AlpataBLL.Utilities.Security.Jwt
 {
     public class TokenHandler : ITokenHandler
     {
@@ -56,7 +57,7 @@ namespace AlpataAPI.Utilities.Security.Jwt
         {
             var claims = new List<Claim>
             {
-                new(ClaimTypes.Name, string.Join(' ', user.FirstName, user.LastName)),
+                new(ClaimTypes.Name, string.Join(' ', user.Name, user.Surname)),
                 new("Id", user.Id.ToString()),
                 new(ClaimTypes.Email, user?.Email ?? string.Empty)
             };

@@ -1,4 +1,4 @@
-﻿namespace AlpataAPI.Utilities.Security.Jwt
+﻿namespace AlpataBLL.Utilities.Security.Jwt
 { 
     public class Token
     {

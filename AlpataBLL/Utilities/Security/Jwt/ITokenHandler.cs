@@ -1,6 +1,6 @@
 ﻿using AlpataEntities.Entities.Concretes; 
 
-namespace AlpataAPI.Utilities.Security.Jwt
+namespace AlpataBLL.Utilities.Security.Jwt
 {
     public interface ITokenHandler
     {

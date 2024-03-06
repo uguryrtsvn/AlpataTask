@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlpataAPI", "AlpataAPI\AlpataAPI.csproj", "{02C3B7A9-5983-4D05-A255-A793CA7B1600}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlpataAPI", "AlpataAPI\AlpataAPI.csproj", "{02C3B7A9-5983-4D05-A255-A793CA7B1600}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlpataDAL", "AlpataDAL\AlpataDAL.csproj", "{F8E949D2-A0E2-410C-90D5-F750FA8D0DEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlpataDAL", "AlpataDAL\AlpataDAL.csproj", "{F8E949D2-A0E2-410C-90D5-F750FA8D0DEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlpataEntities", "AlpataEntities\AlpataEntities.csproj", "{88AADEA9-E426-4AFF-9192-53F6179B73A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlpataEntities", "AlpataEntities\AlpataEntities.csproj", "{88AADEA9-E426-4AFF-9192-53F6179B73A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlpataBLL", "AlpataBLL\AlpataBLL.csproj", "{63AFD87A-77D0-48EC-84D6-55616856AC09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlpataBLL", "AlpataBLL\AlpataBLL.csproj", "{63AFD87A-77D0-48EC-84D6-55616856AC09}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
