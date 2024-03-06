@@ -11,7 +11,6 @@ namespace AlpataBLL.Services.Base
 {
     public interface IBaseService<T> where T : class, IBaseEntity,new()
     {
-        Task<IDataResult<TResult>> GetAsync<TResult>(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, int skip = 0, bool ignoreQueryFilters = false)
-            where TResult : class, new();
+        Task<IDataResult<T>> GetAsync(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, int skip = 0, bool ignoreQueryFilters = false);
     }
 }

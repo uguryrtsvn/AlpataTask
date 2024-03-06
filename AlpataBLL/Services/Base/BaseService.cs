@@ -20,14 +20,12 @@ namespace AlpataBLL.Services.Base
             _entityRepository = entityRepository;
         }
 
-        public virtual async Task<IDataResult<TResult>> GetAsync<TResult>(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, int skip = 0, bool ignoreQueryFilters = false)
-         where TResult : class, new()
+        public virtual async Task<IDataResult<T>> GetAsync(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, int skip = 0, bool ignoreQueryFilters = false) 
         {
-            return null;
-            //TResult? getResult = await _entityRepository.GetAsync<TResult>(filter, orderBy, skip, ignoreQueryFilters);
-            //return getResult != null ?
-            //    new SuccessDataResult<TResult>(getResult, Messages.Found) :
-            //    new ErrorDataResult<TResult>(Messages.NotFound);
+            T? getResult = await _entityRepository.GetAsync(filter,null, orderBy,null, skip, ignoreQueryFilters);
+            return getResult != null ?
+                new SuccessDataResult<T>(getResult, Messages.Found) :
+                new ErrorDataResult<T>(Messages.NotFound);
         }
 
     }
