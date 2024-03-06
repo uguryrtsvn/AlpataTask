@@ -1,5 +1,5 @@
 ﻿
-using AlpataEntities.Entities.Abstracts;
+using AlpataEntities.Entities.Base;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AlpataEntities.Entities.Concretes
 {
-    public class Inventory: BaseEntity
+    public class Inventory : BaseEntity
     {
         public string FileName { get; set; } 
         public byte[] FileData { get; set; }

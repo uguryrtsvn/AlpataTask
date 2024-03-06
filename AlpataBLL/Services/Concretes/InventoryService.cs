@@ -10,14 +10,12 @@ using System.Threading.Tasks;
 
 namespace AlpataBLL.Services.Concretes
 {
-    public class MeetingService : BaseService<Meeting>, IMeetingService
+    public class InventoryService : BaseService<Inventory>, IInventoryService
     {
-        readonly IMeetingRepository _meetingRepository;
-
-        public MeetingService(IMeetingRepository meetingRepository) : base(meetingRepository)
+        readonly IInventoryRepository IInventoryService;
+        public InventoryService(IInventoryRepository entityRepository) : base(entityRepository)
         {
-            _meetingRepository = meetingRepository;
-        } 
-        
+            IInventoryService = entityRepository;
+        }
     }
 }

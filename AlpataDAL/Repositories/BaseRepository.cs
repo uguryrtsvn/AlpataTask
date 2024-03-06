@@ -1,6 +1,6 @@
-﻿ 
+﻿
 using AlpataDAL.IRepositories;
-using AlpataEntities.Entities.Interfaces;
+using AlpataEntities.Entities.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace AlpataDAL.Repositories
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
+    public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity,new ()
     {
         private readonly AlpataDbContext db;
 
@@ -28,6 +28,7 @@ namespace AlpataDAL.Repositories
 
         public async Task<bool> CreateAsync(T entity)
         {
+            entity.CreatedTime = DateTime.Now;
             await db.Set<T>().AddAsync(entity);
             return await db.SaveChangesAsync() > 0;
         }
@@ -84,9 +85,10 @@ namespace AlpataDAL.Repositories
         }
 
         public async Task<bool> UpdateAsync(T entity)
-        {
+        { 
             db.Set<T>().Update(entity);
             return await db.SaveChangesAsync() > 0;
         }
+         
     }
 }

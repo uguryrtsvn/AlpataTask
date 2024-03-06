@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AlpataBLL\AlpataBLL.csproj" />
     <ProjectReference Include="..\AlpataDAL\AlpataDAL.csproj" />
   </ItemGroup>
 

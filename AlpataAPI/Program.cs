@@ -1,3 +1,5 @@
+using AlpataBLL.Services.Abstracts;
+using AlpataBLL.Services.Concretes;
 using AlpataDAL;
 using AlpataDAL.IRepositories;
 using AlpataDAL.Repositories;
@@ -37,6 +39,10 @@ builder.Services.AddIdentityCore<AppUser>(config =>
 builder.Services.AddTransient<IAppUserRepository, AppUserRepository>();
 builder.Services.AddTransient<IInventoryRepository, InventoryRepository>(); 
 builder.Services.AddTransient<IMeetingRepository, MeetingRepository>(); 
+
+builder.Services.AddTransient<IMeetingService, MeetingService>(); 
+builder.Services.AddTransient<IUserService, UserService>(); 
+builder.Services.AddTransient<IInventoryService, InventoryService>(); 
 builder.Services.AddTransient<DbInitializer>();
 #endregion
  

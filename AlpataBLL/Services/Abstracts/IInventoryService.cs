@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AlpataBLL.Services.Abstracts
 {
-    public interface IMeetingService : IBaseService<Meeting>
+    public interface IInventoryService : IBaseService<Inventory>
     {
     }
 }

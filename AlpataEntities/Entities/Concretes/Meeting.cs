@@ -1,5 +1,5 @@
 ﻿
-using AlpataEntities.Entities.Abstracts;
+using AlpataEntities.Entities.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;

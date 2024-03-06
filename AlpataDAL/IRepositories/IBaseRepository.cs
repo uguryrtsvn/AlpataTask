@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Query;
+﻿using AlpataEntities.Entities.Base;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +9,13 @@ using System.Threading.Tasks;
 
 namespace AlpataDAL.IRepositories
 {
-    public interface IBaseRepository<T> where T : class
+    public interface IBaseRepository<T> where T : class, IBaseEntity, new()
     {
         Task<bool> CreateAsync(T entity);
         Task<bool> UpdateAsync(T entity);
-        Task<bool> DeleteAsync(T entity);
-        Task<TResult?> GetAsync<TResult>(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, int skip = 0, bool ignoreQueryFilters = false) where TResult : class, new();
+        Task<bool> DeleteAsync(T entity); 
+        Task<T?> GetAsync(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, Func<IQueryable<T>, IQueryable<T>>? selector = null, int skip = 0, bool ignoreQueryFilters = false);
+
 
         Task<bool> Any(Expression<Func<T, bool>> expression);
         Task<T> GetWhere(Expression<Func<T, bool>> expression);
