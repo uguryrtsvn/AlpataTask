@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AlpataBLL.Services.EmailService
 {
-    public class EmailRequestModel
+    public class EmailModel
     {
         public string Receiver { get; set; }
         public string Subject { get; set; }

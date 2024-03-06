@@ -2,6 +2,7 @@
 using AlpataBLL.Services.Base;
 using AlpataDAL.IRepositories;
 using AlpataEntities.Entities.Concretes;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace AlpataBLL.Services.Concretes
     public class UserService : BaseService<AppUser>, IUserService
     {
         readonly IAppUserRepository _userRepository;
-        public UserService(IAppUserRepository entityRepository) : base(entityRepository)
+        public UserService(IAppUserRepository entityRepository,IMapper mapper) : base(entityRepository, mapper)
         {
             _userRepository = entityRepository;
         }

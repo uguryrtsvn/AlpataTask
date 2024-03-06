@@ -1,4 +1,6 @@
-﻿using AlpataBLL.Services.Base;
+﻿using AlpataBLL.BaseResult.Abstracts;
+using AlpataBLL.Services.Base;
+using AlpataEntities.Dtos.MeetingDtos;
 using AlpataEntities.Entities.Concretes;
 using System;
 using System.Collections.Generic;
@@ -10,5 +12,6 @@ namespace AlpataBLL.Services.Abstracts
 {
     public interface IMeetingService : IBaseService<Meeting>
     {
+        Task<IDataResult<MeetingDto?>> GetMeetingWithId(Guid id); 
     }
 }

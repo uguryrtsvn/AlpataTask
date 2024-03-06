@@ -13,12 +13,12 @@ namespace AlpataBLL.Services.EmailService
     public class EmailService : IEmailService
     {
 
-        public async Task<IBaseResult> SendEmail(EmailRequestModel EmailRequestModel)
+        public async Task<IBaseResult> SendEmail(EmailModel EmailRequestModel)
         {
             try
             {
                 MailMessage mail = new MailMessage();
-                mail.From = new MailAddress("info@yorumingo.com", "Yorumingo"); 
+                mail.From = new MailAddress("info@yorumingo.com", "ALPATA TEKNOLOJİ"); 
                 mail.To.Add(EmailRequestModel.Receiver);
                 mail.Subject = EmailRequestModel.Subject;
                 mail.IsBodyHtml = true;

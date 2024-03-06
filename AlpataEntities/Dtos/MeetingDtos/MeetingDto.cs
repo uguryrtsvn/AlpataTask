@@ -1,23 +1,23 @@
-﻿
-using AlpataEntities.Entities.Base;
+﻿using AlpataEntities.Entities.Concretes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlpataEntities.Entities.Concretes
+namespace AlpataEntities.Dtos.MeetingDtos
 {
-    public class Meeting: BaseEntity
+    public class MeetingDto
     {
-        public Meeting()
+        public MeetingDto()
         {
-           Inventories = new HashSet<Inventory>();
+            Inventories = new List<Inventory>();
         }
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public DateTime Description { get; set; }
-        public ICollection<Inventory>? Inventories { get; set; }
+        public List<Inventory>? Inventories { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 using AlpataBLL.BaseResult.Abstracts;
 using AlpataBLL.Utilities.Security.Jwt;
-using AlpataEntities.Dtos;
+using AlpataEntities.Dtos.AuthDtos;
 
 namespace AlpataBLL.Services.Abstracts
 {

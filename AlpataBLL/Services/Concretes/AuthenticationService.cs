@@ -7,7 +7,7 @@ using AlpataBLL.Services.EmailService;
 using AlpataBLL.Utilities.Hashing;
 using AlpataBLL.Utilities.Security.Jwt;
 using AlpataDAL.IRepositories;
-using AlpataEntities.Dtos;
+using AlpataEntities.Dtos.AuthDtos;
 using AlpataEntities.Entities.Concretes;
 using AutoMapper;
 using System.Globalization;
@@ -64,7 +64,7 @@ namespace AlpataBLL.Services.Concretes
 
             if (addResult)
             {
-                await _emailService.SendEmail(new EmailRequestModel()
+                await _emailService.SendEmail(new EmailModel()
                 {
                     Content = $"{FormatName($"{dto.Name} {dto.Surname}")} Tebrikler kaydınız tamamlandı.",
                     Receiver = dto.Email,

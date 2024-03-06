@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlpataEntities.Dtos
+namespace AlpataEntities.Dtos.AuthDtos
 {
     public class LoginDto
     {

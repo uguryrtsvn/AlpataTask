@@ -10,7 +10,7 @@ namespace AlpataBLL.Services.EmailService
 {
     public interface IEmailService
     {
-        Task<IBaseResult> SendEmail(EmailRequestModel EmailRequestModel);
+        Task<IBaseResult> SendEmail(EmailModel EmailRequestModel);
 
     }
 }

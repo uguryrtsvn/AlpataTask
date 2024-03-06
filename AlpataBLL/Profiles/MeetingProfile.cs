@@ -1,4 +1,4 @@
-﻿using AlpataEntities.Dtos.AuthDtos;
+﻿using AlpataEntities.Dtos.MeetingDtos;
 using AlpataEntities.Entities.Concretes;
 using AutoMapper;
 using System;
@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace AlpataBLL.Profiles
 {
-    public class AppUserProfile : Profile
+    public class MeetingProfile : Profile
     {
-        public AppUserProfile()
+        public MeetingProfile()
         {
-            CreateMap<RegisterDto, AppUser>(); 
+            CreateMap<Meeting,MeetingDto>().ReverseMap();
         }
     }
 }

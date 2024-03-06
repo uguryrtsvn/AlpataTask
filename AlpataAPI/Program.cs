@@ -9,6 +9,7 @@ using AlpataDAL.IRepositories;
 using AlpataDAL.Repositories;
 using AlpataDAL.SeedData;
 using AlpataEntities.Entities.Concretes;
+using Asp.Versioning;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -32,9 +33,7 @@ builder.Services.AddDbContext<AlpataDbContext>(opt => opt.UseSqlServer(builder.C
 #region Auto Mapper
 builder.Services.AddAutoMapper(typeof(IProfile));
 #endregion
-
-
-
+ 
 #region Cors
 builder.Services.AddCors(options =>
     options.AddDefaultPolicy(builder =>
@@ -75,6 +74,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 #endregion
 
+#region API VERSIONING 
+builder.Services.AddApiVersioning(setup =>
+{   
+    setup.DefaultApiVersion = new ApiVersion(1, 0);
+    setup.AssumeDefaultVersionWhenUnspecified = true; 
+    setup.ReportApiVersions = true; 
+}).AddMvc();
+#endregion
 #region Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -105,12 +112,16 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 #endregion
+
 #region Fluent Validation
 builder.Services.AddValidatorsFromAssemblyContaining<IFluentValidator>().AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 #endregion
+
+
 #region Dependencies 
 builder.Services.AddDependencyResolvers(new BusinessModule());
 #endregion
+
 var app = builder.Build();
 
 // DB Strategy  //Db yoksa runtimede oluþup daha sonra proje ayaða kaldýrýlýr.

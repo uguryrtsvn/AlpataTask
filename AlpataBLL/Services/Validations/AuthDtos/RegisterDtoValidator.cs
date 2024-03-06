@@ -1,5 +1,5 @@
 ﻿using AlpataBLL.Constants;
-using AlpataEntities.Dtos;
+using AlpataEntities.Dtos.AuthDtos;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
