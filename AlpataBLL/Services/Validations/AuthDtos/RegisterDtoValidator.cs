@@ -22,14 +22,13 @@ namespace AlpataBLL.Services.Validations.AuthDtos
               .NotEmpty().WithMessage(string.Format(ValidationMessages.NotEmpty, "EmailConfirm"));
 
             RuleFor(x => x.Password)
-            .NotEmpty().WithMessage("Şifre alanı boş bırakılamaz.")
+            .NotEmpty().WithMessage(string.Format(ValidationMessages.NotEmpty, "Şifre"))
             .MinimumLength(6).WithMessage("Şifre en az 6 karakter olmalıdır.")
             .MaximumLength(12).WithMessage("Şifre en fazla 12 karakter olmalıdır.");
 
             RuleFor(x => x.PasswordConfirm)
                 .Equal(x => x.Password).WithMessage("Şifre ve şifre tekrarı eşleşmiyor.");
-
-
+             
             RuleFor(x => x.Name)
             .NotEmpty().WithMessage(string.Format(ValidationMessages.NotEmpty, "Name"));
             RuleFor(x => x.Surname)

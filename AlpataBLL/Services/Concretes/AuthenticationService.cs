@@ -46,11 +46,11 @@ namespace AlpataBLL.Services.Concretes
             return new ErrorDataResult<Token>(Messages.LoginFailed);
         }
 
-        public async Task<IDataResult<bool>> Register(RegisterDto dto)
+        public async Task<IDataResult<RegisterDto>> Register(RegisterDto dto)
         {
             var normalizedEmail = dto.Email.ToUpper(new CultureInfo("en-US"));
             var isUserExist = await _userRepository.AnyAsync(x => x.NormalizedEmail == normalizedEmail);
-            if (isUserExist) return new ErrorDataResult<bool>(false, string.Format(Messages.EmailAlreadyExist, dto.Email));
+            if (isUserExist) return new ErrorDataResult<RegisterDto>(dto, string.Format(Messages.EmailAlreadyExist, dto.Email));
 
             HashingHelper.CreatePassword(dto.Password, out byte[] passwordHash, out byte[] passwordSalt);
             var entity = _mapper?.Map<AppUser>(dto);
@@ -69,11 +69,10 @@ namespace AlpataBLL.Services.Concretes
                     Content = $"{FormatName($"{dto.Name} {dto.Surname}")} Tebrikler kaydınız tamamlandı.",
                     Receiver = dto.Email,
                     Subject = "Alpata Kaydınız Oluşturuldu."
-                });
-                return new SuccessDataResult<bool>(true,Messages.RegisterSuccess);
-            }
-
-            return new ErrorDataResult<bool>(false,Messages.RegisterFailed);
+                }); 
+                return new SuccessDataResult<RegisterDto>(dto, Messages.RegisterSuccess);
+            } 
+            return new ErrorDataResult<RegisterDto>(dto, Messages.RegisterFailed);
         }
         private string FormatName(string fullName)
         {

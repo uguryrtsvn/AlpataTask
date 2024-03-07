@@ -1,32 +1,31 @@
-﻿using AlpataUI.Models;
+﻿using AlpataEntities.Dtos.AuthDtos;
+using AlpataUI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace AlpataUI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        readonly IToastNotification _toastNotification;
 
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
+        public HomeController(IToastNotification toastNotification)
+        { 
+            _toastNotification = toastNotification;
         }
-
+  
         public IActionResult Index()
         {
-            return View();
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Dashboard");
+            return View(new RegisterDto());
         }
+        public IActionResult Login() => View();
+        
+        public IActionResult Loginn() => View();
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }

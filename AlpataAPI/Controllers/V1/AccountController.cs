@@ -32,9 +32,9 @@ namespace AlpataAPI.Controllers.V1
         }
 
         [HttpGet, Authorize]
-        public IActionResult Auth()
+        public IActionResult AuthTest()
         {
-            return Ok();
+            return Ok("Authorize Succesed");
         }
     }
 }

@@ -1,0 +1,51 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- App favicon -->
+    @*<link rel="shortcut icon" href="~/icon.png">*@
+    @await RenderSectionAsync("Styles", false)
+    <!-- App css -->
+    <link href="~/Dassets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Dassets/css/jquery-ui.min.css" rel="stylesheet">
+    <link href="~/Dassets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Dassets/css/metisMenu.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Dassets/css/app.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/site.css" rel="stylesheet" type="text/css" asp-append-version="true" />
+    <link href="~/Dassets/css/dashboard-main.css" rel="stylesheet" type="text/css" asp-append-version="true" />
+
+
+</head>
+
+<body class="account-body accountbg">
+
+    @RenderBody()
+
+
+
+    <script src="~/Dassets/js/jquery.min.js"></script>
+    <script src="~/Dassets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Dassets/js/metismenu.min.js"></script>
+    <script src="~/Dassets/js/waves.js"></script>
+    <script src="~/Dassets/js/feather.min.js"></script>
+    <script src="~/Dassets/js/simplebar.min.js"></script>
+    <script src="~/Dassets/js/jquery-ui.min.js"></script>
+    <script src="~/Dassets/js/moment.js"></script>
+    <script src="~/Dassets/plugins/daterangepicker/daterangepicker.js"></script>
+
+
+    <!-- App js -->
+    <script src="~/Dassets/js/app.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/Dassets/js/dashboard-main.js" asp-append-version="true"></script> 
+    @await Component.InvokeAsync("NToastNotify")
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

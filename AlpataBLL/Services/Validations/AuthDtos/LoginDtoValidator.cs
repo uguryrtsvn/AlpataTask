@@ -14,11 +14,11 @@ namespace AlpataBLL.Services.Validations.AuthDtos
         public LoginDtoValidator()
         {
             RuleFor(x => x.Email)
-                .NotEmpty().WithMessage(string.Format(ValidationMessages.NotEmpty, "E-mail address"))
+                .NotEmpty().WithMessage(string.Format(ValidationMessages.NotEmpty, "E-mail"))
                 .EmailAddress().WithMessage(ValidationMessages.InvalidEmail);
 
             RuleFor(x => x.Password)
-                .NotEmpty().WithMessage(string.Format(ValidationMessages.NotEmpty, "password"))
+                .NotEmpty().WithMessage(string.Format(ValidationMessages.NotEmpty, "Şifre"))
                 .MinimumLength(6).WithMessage("Şifre en az 6 karakter olmalıdır.")
                 .MaximumLength(12).WithMessage("Şifre en fazla 12 karakter olmalıdır.");
         }

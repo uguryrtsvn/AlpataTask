@@ -8,6 +8,6 @@ namespace AlpataBLL.Services.Abstracts
     public interface IAuthenticationService
     {
         Task<IDataResult<Token>> Login(LoginDto loginDto);
-        Task<IDataResult<bool>> Register(RegisterDto dto); 
+        Task<IDataResult<RegisterDto>> Register(RegisterDto dto); 
     }
 }
