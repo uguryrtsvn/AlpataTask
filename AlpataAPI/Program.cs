@@ -1,4 +1,5 @@
 using AlpataAPI.Extentions;
+using AlpataAPI.OpenApiOptions;
 using AlpataBLL;
 using AlpataBLL.DependencyResolvers;
 using AlpataBLL.Profiles;
@@ -9,15 +10,20 @@ using AlpataDAL.IRepositories;
 using AlpataDAL.Repositories;
 using AlpataDAL.SeedData;
 using AlpataEntities.Entities.Concretes;
-using Asp.Versioning;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -75,17 +81,37 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 #endregion
 
 #region API VERSIONING 
-builder.Services.AddApiVersioning(setup =>
-{   
-    setup.DefaultApiVersion = new ApiVersion(1, 0);
-    setup.AssumeDefaultVersionWhenUnspecified = true; 
-    setup.ReportApiVersions = true; 
-}).AddMvc();
-#endregion
-#region Swagger
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
+//builder.Services.AddApiVersioning(setup =>
+//{   
+//    setup.DefaultApiVersion = new ApiVersion(1, 0);
+//    setup.AssumeDefaultVersionWhenUnspecified = true; 
+//    setup.ReportApiVersions = true; 
+//}).AddMvc();
+builder.Services.AddApiVersioning(opt =>
 {
+    opt.DefaultApiVersion = new ApiVersion(1, 0);
+    opt.AssumeDefaultVersionWhenUnspecified = true;
+    opt.ReportApiVersions = true;
+    opt.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(),
+                                                    new HeaderApiVersionReader("x-api-version"),
+                                                    new MediaTypeApiVersionReader("x-api-version"));
+});
+
+builder.Services.AddVersionedApiExplorer(setup =>
+{
+    setup.GroupNameFormat = "'v'VVV";
+    setup.SubstituteApiVersionInUrl = true;
+});
+#endregion
+#region Swagger 
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>(); 
+builder.Services.AddSwaggerGen(options =>
+{ 
+    ////VERSION
+    //options.SwaggerDoc("v1", new OpenApiInfo { Title = "API WSVAP (WebSmartView)", Version = "v1" });
+    //options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First()); 
+
+    //JWT
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Scheme = "Bearer",
@@ -130,8 +156,18 @@ scope.ServiceProvider.GetRequiredService<DbInitializer>().Run();
 
 // Configure the HTTP request pipeline.
 
+var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(options =>
+{  
+    foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+    {
+        var url = $"/swagger/{description.GroupName}/swagger.json";
+        var name = description.GroupName.ToUpperInvariant();
+        options.SwaggerEndpoint(url, name.ToString());
+    }
+});
 
 app.UseCors();
 app.UseHttpsRedirection();

@@ -1,20 +1,19 @@
 ﻿using AlpataBLL.Services.Abstracts;
-using AlpataEntities.Dtos.MeetingDtos;
-using Asp.Versioning;
+using AlpataEntities.Dtos.MeetingDtos; 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AlpataAPI.Controllers
+namespace AlpataAPI.Controllers.V2
 {
     [Authorize]
-    [ApiVersion("1.0")]
-    [Route("api/[controller]/[action]")]
     [ApiController]
-    public class MeetingController : BaseController
+    [Route("api/v{version:apiVersion}/[controller]/[action]")] 
+    [ApiVersion("2.0")]
+    public class Meeting2Controller : ControllerBase
     {
         readonly IMeetingService _meetingService;
-        public MeetingController(IMeetingService meetingService)
+        public Meeting2Controller(IMeetingService meetingService)
         {
             _meetingService = meetingService;
         }
@@ -24,7 +23,7 @@ namespace AlpataAPI.Controllers
           var result =  await _meetingService.GetMeetingWithId(Guid.Parse(id));
          return result.Success ? Ok(result) : BadRequest(result);
         }
-
+        [MapToApiVersion("2.0")]
         [HttpPost]
         public async Task<IActionResult> CreateMeeting(MeetingDto meeting)
         {

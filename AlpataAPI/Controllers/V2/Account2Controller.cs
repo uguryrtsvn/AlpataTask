@@ -1,20 +1,19 @@
 ﻿using AlpataBLL.Services.Abstracts;
-using AlpataEntities.Dtos.AuthDtos;
-using Asp.Versioning;
+using AlpataEntities.Dtos.AuthDtos; 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AlpataAPI.Controllers
+namespace AlpataAPI.Controllers.V2
 {
-    [ApiVersion("1.0")]
-    [Route("api/[controller]/[action]")]
     [ApiController]
-    public class AccountController : BaseController
+    [Route("api/v{version:apiVersion}/[controller]/[action]")] 
+    [ApiVersion("2.0")]
+    public class Account2Controller : ControllerBase
     { 
         private readonly IAuthenticationService _authenticationService; 
 
-        public AccountController(IAuthenticationService authenticationService)
+        public Account2Controller(IAuthenticationService authenticationService)
         { 
             _authenticationService = authenticationService; 
         }
