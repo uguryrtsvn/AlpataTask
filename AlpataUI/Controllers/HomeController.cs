@@ -24,8 +24,7 @@ namespace AlpataUI.Controllers
             return View(new RegisterDto());
         }
         public IActionResult Login() => View();
-        
-        public IActionResult Loginn() => View();
+         
 
     }
 }

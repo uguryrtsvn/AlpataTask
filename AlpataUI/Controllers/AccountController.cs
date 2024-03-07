@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using AlpataUI.ClientHelper;
 using System.Globalization;
 using Microsoft.JSInterop;
-using Newtonsoft.Json; 
+using Newtonsoft.Json;
+using AlpataUI.Helpers.ClientHelper;
+using AlpataUI.Helpers.FileUploadHelper;
+using AlpataBLL.BaseResult.Concretes;
 
 namespace AlpataUI.Controllers
 {
@@ -18,22 +20,24 @@ namespace AlpataUI.Controllers
     {
         readonly IToastNotification _toastNotification;
         private readonly IAlpataClient _alpataClient;
+        private readonly IFileUploadService _fileUploadService;
 
-        public AccountController(IToastNotification toastNotification, IAlpataClient alpataClient)
+        public AccountController(IToastNotification toastNotification, IAlpataClient alpataClient, IFileUploadService fileUploadService)
         {
             _toastNotification = toastNotification;
             _alpataClient = alpataClient;
+            _fileUploadService = fileUploadService;
         }
- 
+
         [HttpPost]
         public async Task<IActionResult> Login(LoginDto loginAuthDto, string returnUrl)
         {
             if (User.Identity.IsAuthenticated)
                 return RedirectToAction("Index", "Dashboard");
-             
+
             var loginResult = await _alpataClient.Action<Token, LoginDto>("Account/Login", loginAuthDto);
             if (loginResult.Success)
-            {  
+            {
                 await SignInUser(loginResult.Data, loginAuthDto.RememberMe);
 
                 JwtSecurityToken token = HandleJwtToken(loginResult.Data);
@@ -44,7 +48,7 @@ namespace AlpataUI.Controllers
                         returnUrl = $"/{returnUrl}";
 
                     return LocalRedirect(returnUrl);
-                } 
+                }
                 return RedirectToAction("Index", "Dashboard");
             }
             _toastNotification.AddErrorToastMessage(loginResult.Message);
@@ -56,28 +60,30 @@ namespace AlpataUI.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Logout()
-        { 
+        {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             _toastNotification.AddInfoToastMessage("Çıkış yapıldı.");
             return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterDto registerDto,IFormFile file)
+        public async Task<IActionResult> Register(RegisterDto registerDto, IFormFile file)
         {
-
-            if ((registerDto.Email.ToUpper(new CultureInfo("en-US")) == registerDto.EmailConfirm.ToUpper(new CultureInfo("en-US"))) && registerDto.Password == registerDto.PasswordConfirm)
+            registerDto.ImagePath = await _fileUploadService.SaveFileAsync(file, FileStorageLocation.Local);
+            if (!string.IsNullOrEmpty(registerDto.ImagePath))
             {
                 var result = await _alpataClient.Add(registerDto, "Account/Register");
                 if (result.Success)
                 {
-                    _toastNotification.AddSuccessToastMessage(result.Message); 
+                    _toastNotification.AddSuccessToastMessage(result.Message);
                     return View("~/Views/Home/Login.cshtml", new LoginDto() { Email = registerDto.Email });
                 }
-                _toastNotification.AddErrorToastMessage(result.Message);
-                return View("~/Views/Home/Index.cshtml",registerDto);
+                else
+                {
+                    _toastNotification.AddErrorToastMessage(result.Message);
+                    await _fileUploadService.DeleteFileAsync(registerDto.ImagePath);
+                }
             }
-            _toastNotification.AddErrorToastMessage("Bilgileri eşleşmiyor."); 
             return View("~/Views/Home/Index.cshtml", registerDto);
         }
 
@@ -98,7 +104,7 @@ namespace AlpataUI.Controllers
                 new("TokenExp", token.Expiration.ToLongDateString()),
                 new(ClaimTypes.Name, jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name).Value),
                 new("Id", jwtToken.Claims.FirstOrDefault(claim => claim.Type == "Id")?.Value),
-                new(ClaimTypes.Email, jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email).Value) 
+                new(ClaimTypes.Email, jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email).Value)
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -114,7 +120,7 @@ namespace AlpataUI.Controllers
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity),
-                authProperties);   
+                authProperties);
         }
     }
 }

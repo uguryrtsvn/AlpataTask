@@ -1,5 +1,6 @@
 using AlpataBLL;
-using AlpataUI.ClientHelper;
+using AlpataUI.Helpers.ClientHelper;
+using AlpataUI.Helpers.FileUploadHelper;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -51,6 +52,8 @@ builder.Services
     .ConfigurePrimaryHttpMessageHandler(() =>
         new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate });
 #endregion
+
+builder.Services.AddScoped<IFileUploadService, FileUploadService>();
 
 #region Fluent Validation
 builder.Services.AddValidatorsFromAssemblyContaining<IFluentValidator>().AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();

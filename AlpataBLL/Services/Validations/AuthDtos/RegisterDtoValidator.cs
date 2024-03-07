@@ -33,6 +33,7 @@ namespace AlpataBLL.Services.Validations.AuthDtos
             .NotEmpty().WithMessage(string.Format(ValidationMessages.NotEmpty, "Name"));
             RuleFor(x => x.Surname)
             .NotEmpty().WithMessage(string.Format(ValidationMessages.NotEmpty, "Surname"));
+            RuleFor(x => x.Phone).NotEmpty().WithMessage("Telefon numarası boş geçilemez.").Length(11).WithMessage("Telefon 11 karakter olmalı");
         }
     }
 }

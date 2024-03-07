@@ -18,7 +18,7 @@ namespace AlpataEntities.Entities.Concretes
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Phone { get; set; }
-        public string? ImagePath { get; set; }  
+        public string ImagePath { get; set; }  
         public string UserName { get; set; }
         public string NormalizedUserName { get; set; }
         public string Email { get; set; }

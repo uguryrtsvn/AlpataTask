@@ -16,4 +16,8 @@
     <ProjectReference Include="..\AlpataBLL\AlpataBLL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Dassets\images\users\" />
+  </ItemGroup>
+
 </Project>

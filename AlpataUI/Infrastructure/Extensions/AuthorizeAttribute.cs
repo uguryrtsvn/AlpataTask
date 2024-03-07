@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Encodings.Web;
-using System.Security.Claims;
-using AlpataUI.ClientHelper;
+using System.Security.Claims; 
 
 namespace AlpataUI.Infrastructure.Extensions
 {
