@@ -1,0 +1,21 @@
+.password-eye {
+    position: absolute;
+    top: 12px;
+    right: 22px;
+    cursor: pointer;
+}
+
+.field-validation-error{
+    color : red;
+    font-style : italic;
+}
+
+#loading-spinner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0, .6);
+    z-index: 9999;
+}

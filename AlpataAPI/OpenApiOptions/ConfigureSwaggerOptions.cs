@@ -25,7 +25,7 @@ namespace AlpataAPI.OpenApiOptions
             {
                 Title = "Alpata Web API",
                 Version = description.ApiVersion.ToString(),
-                Description = "",
+                Description = "Bu API da versiyonlama kullanılmıştır.",
                 Contact = new OpenApiContact { Name = "Author", Email = "uguryrtsvn@hotmail.com" }
             };
 

@@ -22,8 +22,7 @@ namespace AlpataAPI.Controllers.V2
         {
           var result =  await _meetingService.GetMeetingWithId(Guid.Parse(id));
          return result.Success ? Ok(result) : BadRequest(result);
-        }
-        [MapToApiVersion("2.0")]
+        } 
         [HttpPost]
         public async Task<IActionResult> CreateMeeting(MeetingDto meeting)
         {
