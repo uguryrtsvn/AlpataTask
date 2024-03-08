@@ -39,7 +39,7 @@ namespace AlpataUI.Controllers
             var loginResult = await _alpataClient.Action<Token, LoginDto>("Account/Login", loginAuthDto);
             if (loginResult.Success)
             {
-                await SignInUser(loginResult.Data, loginAuthDto.RememberMe); 
+                await SignInUser(loginResult.Data, loginAuthDto.RememberMe);
                 JwtSecurityToken token = HandleJwtToken(loginResult.Data);
 
                 if (!string.IsNullOrWhiteSpace(returnUrl))
@@ -69,9 +69,10 @@ namespace AlpataUI.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterDto registerDto, IFormFile file)
         {
-            registerDto.ImagePath = await _fileUploadService.SaveFileAsync(file, FileStorageLocation.Local);
-            if (!string.IsNullOrEmpty(registerDto.ImagePath))
+            var setImage = await _fileUploadService.SaveFileAsync(file, FileStorageLocation.Local);
+            if (setImage.Success)
             {
+                registerDto.ImagePath = setImage.Message;
                 var result = await _alpataClient.Add(registerDto, "Account/Register");
                 if (result.Success)
                 {
@@ -84,6 +85,7 @@ namespace AlpataUI.Controllers
                     await _fileUploadService.DeleteFileAsync(registerDto.ImagePath);
                 }
             }
+            _toastNotification.AddErrorToastMessage(setImage.Message);
             return View("~/Views/Home/Index.cshtml", registerDto);
         }
 

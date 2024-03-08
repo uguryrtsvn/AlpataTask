@@ -18,13 +18,13 @@ builder.Services.AddRazorPages().AddNToastNotifyNoty(new NotyOptions
     ProgressBar = true,
     Timeout = 3000,
 });
-builder.Services.AddResponseCompression(); 
+//builder.Services.AddResponseCompression(); 
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
 {
     options.Cookie.Name = "Auth";
     options.LoginPath = "/Home/Index";
-    options.LogoutPath = new PathString("/Account/SignOut");
+    options.LogoutPath = new PathString("/Account/LogOut");
     options.AccessDeniedPath = "/Home/AccessDenied";
     options.ExpireTimeSpan = TimeSpan.FromDays(365);
     options.SlidingExpiration = true;
@@ -81,7 +81,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 //ResponseCompress
-app.UseResponseCompression();
+//app.UseResponseCompression();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

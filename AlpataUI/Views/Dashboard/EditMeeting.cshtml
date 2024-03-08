@@ -1,10 +1,51 @@
 ﻿@model AlpataEntities.Dtos.MeetingDtos.MeetingDto
 @{
-    ViewData["Title"] = "CreateMeeting";
+    ViewData["Title"] = "EditMeeting";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    int counter = 0;
 }
-@section Styles{
-}
+ 
+<div class="row mt-5">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">@Model.Name Toplantı Bilgileri</h4>
+                <p class="text-muted mb-0">
+                    Toplantı için yüklenmiş envanterleri buradan indirebilir veya <code>silebilirsiniz.</code>
+                </p>
+            </div><!--end card-header-->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Dosya Adı</th>
+                                @* <th>Oluşturulma Tarihi</th>*@
+                                <th class="text-right">İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Inventories)
+                            {
+                                <tr>
+                                    <td>@counter</td>
+                                    <td>@item.FileName</td>
+                                    <td class="text-right">
+                                        <a asp-action="DownloadFile" asp-controller="Home" asp-route-fileId="@item.Id"><i class="las la-download text-info font-18"></i></a>
+                                        <a class="mr-2" data-toggle="modal" href="javascript= void(0);" data-target="#exampleModalSmall" onclick="DeleteFile('@item.Id')"><i class="las la-trash-alt text-danger font-18"></i></a>
+                                    </td>
+                                </tr>
+                                counter++;
+                            }
+
+                        </tbody>
+                    </table><!--end /table-->
+                </div><!--end /tableresponsive-->
+            </div><!--end card-body-->
+        </div><!--end card-->
+    </div> <!-- end col -->
+</div>
 <div class="row mt-5">
     <div class="col-12">
         <div class="card">
@@ -58,17 +99,26 @@
         </div><!--end card-->
     </div><!--end col-->
 </div><!--end row-->
-
-@section Scripts{
-    <partial name="_ValidationScriptsPartial" />
-    <script>
-        $(document).ready(function () {
-            var now = new Date();
-            var formattedDateTime = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-            $('#StartTime').attr('min', formattedDateTime);
-            $('#EndTime').attr('min', formattedDateTime);
-            $('#EndTime').val(formattedDateTime);
-            $('#StartTime').val(formattedDateTime);
-        });
-    </script>
-}
+<div class="modal fade bd-example-modal-sm" id="exampleModalSmall" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title m-0" id="mySmallModalLabel">Dosya Silinecek !</h6>
+                <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="la la-times"></i></span>
+                </button>
+            </div><!--end modal-header-->
+            <div class="modal-body text-center">
+                <h4 class="mb-1">UYARI !</h4>
+                <p class="mb-0 text-muted">Seçmiş olduğunuz dosya silinecek. Eminmisiniz ?</p>
+            </div><!--end modal-body-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-xs" data-dismiss="modal">Vazgeç</button>
+                <form asp-action="DeleteMeetingFile" asp-controller="Dashboard" method="post">
+                    <input type="hidden" id="fileId" name="fileId" />
+                    <button type="submit" class="btn btn-danger btn-xs">Dosyayı Sil</button>
+                </form>
+            </div><!--end modal-footer-->
+        </div><!--end modal-content-->
+    </div><!--end modal-dialog-->
+</div><!--end modal-->

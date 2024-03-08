@@ -25,8 +25,25 @@ namespace AlpataUI.Controllers
             return View(list.Data);
         }
         public IActionResult CreateMeeting() => View();
+        public async Task<IActionResult> EditMeeting(string meetId)
+        {
+            var result = await _alpataClient.GetNoRoot<MeetingDto>("/Meeting/EditMeeting?meetId=" + meetId); 
+            if (result.Success) return View(result.Data);
+            
+            _toastNotification.AddErrorToastMessage(result.Message);
+            return RedirectToAction("Index"); 
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditMeeting(MeetingDto dto)
+        { 
+            return RedirectToAction("Index");
+        }
 
-
+        [HttpPost]
+        public async Task<IActionResult> AddFileToMeeting(IFormFile file, string meetId)
+        {
+            return Ok();
+        }
         #region Meeting 
         [HttpPost]
         public async Task<IActionResult> CreateMeeting(MeetingDto dto)
@@ -52,6 +69,21 @@ namespace AlpataUI.Controllers
                 return RedirectToAction("Index");
             }
             _toastNotification.AddInfoToastMessage("Toplantı bilgileri mailinize gönderilmiştir.");
+            return RedirectToAction("Index");
+
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteUserToMeeting(string meetId)
+        {
+            var meet = await _alpataClient.GetNoRoot<bool>("Meeting/DeleteUserToMeeting?meetId=" + meetId);
+            if (!meet.Success)
+            {
+                _toastNotification.AddErrorToastMessage("Toplantıya iptali sırasında hata oluştu.");
+                return RedirectToAction("Index");
+            }
+            _toastNotification.AddInfoToastMessage("Toplantı kaydınız silinmiştir.");
             return RedirectToAction("Index");
 
         }

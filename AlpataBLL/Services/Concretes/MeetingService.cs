@@ -42,6 +42,8 @@ namespace AlpataBLL.Services.Concretes
         {
          
             var list = await _meetingRepository.GetAllAsync(z => z.Id != Guid.Empty, includes: i => i.Include(m => m.Participants).Include(z => z.CreatorUser));
+            //Burada başlangıç süreleri geçmiş toplantılar için bir Background servis veya başka şekillerle daha anlamlı bir çözüm getirilebilir ama 
+            //şimdilik böyle ameleus bir yöntem kullandım.
             foreach (var x in list)
             {
                 if (x.StartTime < DateTime.Now && x.isActive)
@@ -50,42 +52,92 @@ namespace AlpataBLL.Services.Concretes
                     await _meetingRepository.UpdateAsync(x);
                 }
             }
-            var result = _mapper.Map<List<MeetingDto>>(list);
-            return list != null ? new SuccessDataResult<List<MeetingDto>>(result, Messages.ListSuccess) : new ErrorDataResult<List<MeetingDto>>(result, Messages.ListFailed);
+            var result = _mapper.Map<List<MeetingDto>>(list.OrderByDescending(z => z.CreatedTime)); 
+            return result != null ? new SuccessDataResult<List<MeetingDto>>(result, Messages.ListSuccess) : new ErrorDataResult<List<MeetingDto>>(result, Messages.ListFailed);
         }
 
         public async Task<IDataResult<bool>> AddUserToMeeting(Guid meetId, Guid userId)
         {
-            //var user = await _userService.GetAsync(z => z.Id == userId);
-            var meet = await _meetingRepository.GetAsync(filter: x => x.Id == meetId, includes: z => z.Include(c => c.Inventories).Include(a => a.Participants).Include(x => x.CreatorUser));
-
-            var m = await _meetingRepository.GetAsync(z => z.CreatorUserId == userId, includes: x => x.Include(z => z.Participants));
-
+            var user = await _userService.GetAsync(z => z.Id == userId); 
+            var m = await _meetingRepository.GetAsync(z => z.Id == meetId);
+            
             return await RunTransaction<bool>(async () =>
             {
             var mp = await _participantRepository.CreateAsync(new()
-            {
-                //AppUser = user,
-                AppUserId = userId,
-                //Meeting = meet,
+            { 
+                AppUserId = userId, 
                 MeetingId = meetId
             });
             if (mp)
             {
-                //await _emailService.SendEmail(new()
-                //{
-                //    Subject = "Email Adresinizi Onaylamalısınız.",
-                //    Content = CreateHtmlBody("ApproveConfirm", new Dictionary<string, string>
-                //    {
-                //        { "{username}", string.Join(' ', entity.Name, entity.Surname) },
-                //        { "{applicationLink}", $"{AppSettingsHelper.PresentationUrl}Account/ConfirmedEmail?tkn={uv.Token}" }
-                //    }),
-                //    Receiver = user.Email
-                //});
-                return new SuccessDataResult<bool>(mp);
+                    await _emailService.SendEmail(new()
+                    {
+                        Subject = "Toplantı Bilgileri",
+                        Content = GenerateMeetingHtml(m),
+                        Receiver = user?.Email
+                    });
+                    return new SuccessDataResult<bool>(mp);
             }
             return new ErrorDataResult<bool>(mp);
             });
+        }      
+        public async Task<IDataResult<bool>> DeleteUserToMeeting(Guid meetId, Guid userId)
+        { 
+           var result = await _participantRepository.DeleteAsync(await _participantRepository.GetAsync(z => z.MeetingId == meetId && z.AppUserId == userId));
+           return result ? new SuccessDataResult<bool>(result) : new ErrorDataResult<bool>(result);
+        }
+
+
+
+
+        public string GenerateMeetingHtml(Meeting m)
+        {
+            string htmlContent = $@"<!DOCTYPE html>
+    <html lang=""en"">
+    <head>
+        <meta charset=""UTF-8"">
+        <meta http-equiv=""X-UA-Compatible"" content=""IE=edge"">
+        <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+        <title>{m?.Name} - Toplantı Bilgileri</title>
+        <style>
+            table {{
+                border-collapse: collapse;
+                width: 100%;
+            }}
+            th, td {{
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }}
+            th {{
+                background-color: #f2f2f2;
+            }}
+            img {{
+                display: block;
+                margin: 0 auto;
+                max-width: 200px;
+                max-height: 200px;
+                background-color: #333;
+                padding: 10px;
+            }}
+        </style>
+    </head>
+    <body>
+        <img src=""https://alpatateknoloji.com/images/logo1.png"" alt=""Company Logo"">
+        <h2>{m?.Name} - Toplantı Bilgileri</h2>
+        <table>
+            <tr>
+                <th>Başlık</th>
+                <th>İçerik</th>
+            </tr>
+            <tr><td>Başlangıç Zamanı</td><td>{m?.StartTime}</td></tr>
+            <tr><td>Bitiş Tarihi</td><td>{m?.EndTime}</td></tr>
+            <tr><td>Katılımcı sayısı:</td><td>{m?.Participants.Count}</td></tr>
+        </table>
+    </body>
+    </html>";
+
+            return htmlContent;
         }
     }
 }

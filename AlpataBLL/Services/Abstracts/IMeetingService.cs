@@ -15,5 +15,6 @@ namespace AlpataBLL.Services.Abstracts
         Task<IDataResult<MeetingDto?>> GetMeetingWithId(Guid id);
         Task<IDataResult<List<MeetingDto>>> GetAllAsync();
         Task<IDataResult<bool>> AddUserToMeeting(Guid meetId, Guid userId);
+        Task<IDataResult<bool>> DeleteUserToMeeting(Guid meetId, Guid userId);
     }
 }

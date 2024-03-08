@@ -30,6 +30,12 @@ namespace AlpataAPI.Controllers.V1
         {
             var result = await _meetingService.AddUserToMeeting(Guid.Parse(meetId),parsedUserId);
             return result.Success ? Ok(result) : BadRequest(result);
+        }     
+        [HttpGet]
+        public async Task<IActionResult> DeleteUserToMeeting(string meetId)
+        {
+            var result = await _meetingService.DeleteUserToMeeting(Guid.Parse(meetId),parsedUserId);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -44,12 +50,6 @@ namespace AlpataAPI.Controllers.V1
             meeting.CreatorUserId = Guid.Parse(userId);
             var result = await _meetingService.CreateAsync(meeting);
             return result.Success ? Ok(result) : BadRequest(result);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Deneme()
-        {
-            return Ok("GELDİ");
-        }
+        } 
     }
 }
