@@ -14,17 +14,17 @@ namespace AlpataEntities.Entities.Concretes
         public Meeting()
         {
             Inventories = new HashSet<Inventory>();
-            Participants = new HashSet<AppUser>();
+            Participants = new HashSet<MeetingParticipant>();
         }
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
-        public Guid CreatorUserId { get; set; }
-        public AppUser CreatorUser { get; set; }
+        public Guid CreatorUserId { get; set; } 
+        public virtual AppUser CreatorUser { get; set; }
         public bool isActive { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        public DateTime Description { get; set; }
-        public ICollection<Inventory>? Inventories { get; set; } 
-        public ICollection<AppUser>? Participants { get; set; }
+        public string Description { get; set; }
+        public virtual ICollection<Inventory> Inventories { get; set; }  
+        public ICollection<MeetingParticipant> Participants { get; set; }
     }
 }

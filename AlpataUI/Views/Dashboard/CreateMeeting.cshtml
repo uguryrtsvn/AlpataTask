@@ -22,18 +22,21 @@
                         <form asp-action="CreateMeeting" asp-controller="Dashboard">
                             <div class="form-group">
                                 <label for="projectName">Toplantı Adı</label>
-                                <input type="text" class="form-control" asp-for="Name" aria-describedby="emailHelp" placeholder="Toplantı adını giriniz.">
+                                <input type="text" class="form-control" asp-for="Name" placeholder="Toplantı adını giriniz.">
+                                <span asp-validation-for="Name"></span>
                             </div><!--end form-group-->
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-lg-6 col-3 mb-2 mb-lg-0">
                                         <label for="pro-start-date">Toplantı Başlangıç Tarihi</label>
                                         <input type="datetime-local" id="StartTime" asp-for="StartTime" class="form-control" placeholder="Tarih giriniz">
+                                        <span asp-validation-for="StartTime"></span>
                                     </div><!--end col-->
                                     <div class="col-lg-6 col-3 mb-2 mb-lg-0">
                                         <label for="pro-end-date">Toplantı Bitiş Tarihi</label>
                                         <input type="datetime-local" id="EndTime" asp-for="EndTime" value="@DateTime.Now.ToLongDateString()" class="form-control" placeholder="Tarih giriniz">
-                                    </div><!--end col--> 
+                                        <span asp-validation-for="EndTime"></span>
+                                    </div><!--end col-->
 
                                 </div><!--end row-->
                             </div><!--end form-group-->
@@ -41,9 +44,10 @@
                             <div class="form-group">
                                 <label for="pro-message">Toplantı Açıklaması</label>
                                 <textarea class="form-control" rows="5" asp-for="Description" placeholder="Açıklama giriniz"></textarea>
+                                <span asp-validation-for="Description"></span>
                             </div><!--end form-group-->
 
-                            <button type="submit" class="btn btn-primary btn-sm" style="float:right !important">Toplantı Oluştur</button> 
+                            <button type="submit" class="btn btn-primary btn-sm" style="float:right !important">Toplantı Oluştur</button>
                         </form>  <!--end form-->
                     </div><!--end col-->
 
@@ -54,12 +58,13 @@
 </div><!--end row-->
 
 @section Scripts{
-    <script> 
-        $(document).ready(function () { 
-            var now = new Date(); 
-            var formattedDateTime = now.toISOString().slice(0, 16); 
+    <script>
+        $(document).ready(function () {
+            var now = new Date();
+            var formattedDateTime = now.toISOString().slice(0, 16);
             $('#EndTime').val(formattedDateTime);
             $('#StartTime').val(formattedDateTime);
         });
     </script>
+    <partial name="_ValidationScriptsPartial" />
 }

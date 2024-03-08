@@ -11,6 +11,7 @@ namespace AlpataEntities.Entities.Concretes
 {
     public class AppUser : BaseEntity
     {
+       
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Phone { get; set; }
@@ -21,6 +22,8 @@ namespace AlpataEntities.Entities.Concretes
         public string NormalizedEmail { get; set; }
         public bool EmailConfirmed { get; set; }
         public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }   
+        public byte[] PasswordSalt { get; set; }
+        public ICollection<MeetingParticipant> Participants { get; set; } 
+        public virtual ICollection<Meeting> Meetings { get; set; }
     }
 }

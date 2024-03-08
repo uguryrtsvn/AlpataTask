@@ -12,6 +12,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace AlpataBLL.Services.Base
 {
@@ -46,6 +47,36 @@ namespace AlpataBLL.Services.Base
             return getAllResult != null ?
                 new SuccessDataResult<List<TResult>>(getAllResult, Messages.ListSuccess) :
                 new ErrorDataResult<List<TResult>>(Messages.ListFailed);
+        }
+        protected async Task<IDataResult<TResult>> RunTransaction<TResult>(Func<Task<IDataResult<TResult>>> function)
+        {
+            using (TransactionScope transaction = new(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                IDataResult<TResult> result = new ErrorDataResult<TResult>("Internal Server Error");
+
+                try
+                {
+                    result = await function();
+
+                    if (!result.Success)
+                    {
+                        transaction.Dispose(); 
+                        return result;
+                    }
+
+                    transaction.Complete();
+                }
+                catch (Exception ex)
+                {
+                    result.Message = ex.Message;
+                }
+                finally
+                {
+                    transaction.Dispose();
+                }
+
+                return result;
+            }
         }
     }
 }

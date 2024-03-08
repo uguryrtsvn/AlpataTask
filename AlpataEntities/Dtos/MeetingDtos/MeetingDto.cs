@@ -11,17 +11,18 @@ namespace AlpataEntities.Dtos.MeetingDtos
     {
         public MeetingDto()
         {
-            Inventories = new List<Inventory>();
+            Inventories = new();
+            Participants = new();
         }
         public Guid Id { get; set; }
         public Guid CreatorUserId { get; set; }
-        public AppUser CreatorUser { get; set; }
-        public bool isActive { get; set; }
-        public string Name { get; set; }
+        public AppUser? CreatorUser { get; set; }
+        public string? Name { get; set; }
+        public bool isActive { get; set; } = true;
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        public DateTime Description { get; set; }
-        public List<Inventory>? Inventories { get; set; }
-        public List<AppUser>? Participants { get; set; }
+        public string? Description { get; set; } 
+        public virtual List<Inventory> Inventories { get; set; }
+        public List<MeetingParticipant> Participants { get; set; }
     }
 }

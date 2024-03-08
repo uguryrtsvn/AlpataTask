@@ -20,9 +20,15 @@ namespace AlpataAPI.Controllers.V1
             _meetingService = meetingService; 
         }
         [HttpGet]
-        public async Task<IActionResult> GetMeetingWithId(string id)
+        public async Task<IActionResult> GetMeetingWithId(string Id)
         {
-            var result = await _meetingService.GetMeetingWithId(Guid.Parse(id));
+            var result = await _meetingService.GetMeetingWithId(Guid.Parse(Id));
+            return result.Success ? Ok(result) : BadRequest(result);
+        }    
+        [HttpGet]
+        public async Task<IActionResult> AddUserToMeeting(string meetId)
+        {
+            var result = await _meetingService.AddUserToMeeting(Guid.Parse(meetId),parsedUserId);
             return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpGet]
@@ -35,8 +41,15 @@ namespace AlpataAPI.Controllers.V1
         [HttpPost]
         public async Task<IActionResult> CreateMeeting(MeetingDto meeting)
         {
+            meeting.CreatorUserId = Guid.Parse(userId);
             var result = await _meetingService.CreateAsync(meeting);
             return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Deneme()
+        {
+            return Ok("GELDİ");
         }
     }
 }

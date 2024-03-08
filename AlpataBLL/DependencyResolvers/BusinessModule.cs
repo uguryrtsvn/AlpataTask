@@ -19,6 +19,7 @@ namespace AlpataBLL.DependencyResolvers
             services.AddTransient<IAppUserRepository, AppUserRepository>();
             services.AddTransient<IInventoryRepository, InventoryRepository>();
             services.AddTransient<IMeetingRepository, MeetingRepository>();
+            services.AddTransient<IMeetingParticipantRepository, MeetingParticipantRepository>();
 
 
             services.AddTransient<IMeetingService, MeetingService>();

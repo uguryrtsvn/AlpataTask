@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlpataBLL.Services.Validations.AuthDtos
+namespace AlpataBLL.Validations.AuthDtos
 {
     public class RegisterDtoValidator : AbstractValidator<RegisterDto>
     {
@@ -28,7 +28,7 @@ namespace AlpataBLL.Services.Validations.AuthDtos
 
             RuleFor(x => x.PasswordConfirm)
                 .Equal(x => x.Password).WithMessage("Şifre ve şifre tekrarı eşleşmiyor.");
-             
+
             RuleFor(x => x.Name)
             .NotEmpty().WithMessage(string.Format(ValidationMessages.NotEmpty, "Name"));
             RuleFor(x => x.Surname)

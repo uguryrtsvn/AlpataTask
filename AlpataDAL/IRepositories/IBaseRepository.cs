@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AlpataDAL.IRepositories
 {
-    public interface IBaseRepository<T> where T : class, IBaseEntity, new()
+    public interface IBaseRepository<T> where T : class, new()
     {
         Task<bool> CreateAsync(T entity);
         Task<bool> UpdateAsync(T entity);

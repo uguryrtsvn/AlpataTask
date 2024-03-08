@@ -23,123 +23,69 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>Toplandı Adı</th>
-                                <th>Düzenleyen</th> 
+                                <th>Düzenleyen</th>
                                 <th>Başlangıç Tarihi</th>
                                 <th>Bitiş Tarihi</th>
+                                <th>Katılımcı Sayısı</th>
                                 <th>Durumu</th>
                                 <th>İşlemler</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model)
+                            @if (Model is null || Model.Count()==0)
                             {
-                                <tr>
-                                    <td>@item.Name</td>
-                                    <td>
-                                        <img src="~/@item.CreatorUser.ImagePath" alt="" class="thumb-sm rounded mr-2">
-                                        @item.CreatorUser.Name @item.CreatorUser.Surname
-                                    </td>
-                                    <td>@item.</td>
-                                    <td>@item.StartTime</td>
-                                    <td>@item.EndTime</td>
-                                    @if (item.isActive)
-                                    {
-
-                                        <td><span class="badge badge-md badge-boxed  badge-soft-success">Aktif</span></td>
-                                    }
-                                    else
-                                    {
-                                        <td><span class="badge badge-md badge-boxed  badge-soft-danger">Pasif</span></td>
-                                    }
-                                    <td>
-                                        <small class="float-right ml-2 pt-1 font-10">92%</small>
-                                        <div class="progress mt-2" style="height:3px;">
-                                            <div class="progress-bar bg-success" role="progressbar" style="width: 92%;" aria-valuenow="92" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                <span class="mb-5">Henüz düzenlenmiş bir toplantı yok.</span>
                             }
-                            <tr>
-                                <td>New Office Building</td>
-                                <td>
-                                    <img src="assets/images/users/user-3.jpg" alt="" class="thumb-sm rounded mr-2">
-                                    Frank M. Lyons
-                                </td>
-                                <td>11/6/2020</td>
-                                <td>15/7/2020</td>
-                                <td><span class="badge badge-md badge-boxed  badge-soft-warning">Panding</span></td>
-                                <td>
-                                    <small class="float-right ml-2 pt-1 font-10">0%</small>
-                                    <div class="progress mt-2" style="height:3px;">
-                                        <div class="progress-bar  bg-success" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Website &amp; Blog</td>
-                                <td>
-                                    <img src="assets/images/users/user-4.jpg" alt="" class="thumb-sm rounded mr-2">
-                                    Hyman M. Cross
-                                </td>
-                                <td>21/6/2020</td>
-                                <td>3/7/2020</td>
-                                <td><span class="badge badge-md badge-boxed  badge-soft-warning">Panding</span></td>
-                                <td>
-                                    <small class="float-right ml-2 pt-1 font-10">0%</small>
-                                    <div class="progress mt-2" style="height:3px;">
-                                        <div class="progress-bar  bg-success" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Market Research</td>
-                                <td>
-                                    <img src="assets/images/users/user-5.jpg" alt="" class="thumb-sm rounded mr-2">
-                                    Angelo E. Butler
-                                </td>
-                                <td>30/4/2020</td>
-                                <td>1/6/2020</td>
-                                <td><span class="badge badge-md badge-boxed  badge-soft-success">Active</span></td>
-                                <td>
-                                    <small class="float-right ml-2 pt-1 font-10">78%</small>
-                                    <div class="progress mt-2" style="height:3px;">
-                                        <div class="progress-bar  bg-success" role="progressbar" style="width: 78%;" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Export Marketing</td>
-                                <td>
-                                    <img src="assets/images/users/user-6.jpg" alt="" class="thumb-sm rounded mr-2">
-                                    Robert C. Golding
-                                </td>
-                                <td>20/3/2020</td>
-                                <td>5/5/2020</td>
-                                <td><span class="badge badge-md badge-boxed  badge-soft-success">Active</span></td>
-                                <td>
-                                    <small class="float-right ml-2 pt-1 font-10">45%</small>
-                                    <div class="progress mt-2" style="height:3px;">
-                                        <div class="progress-bar  bg-success" role="progressbar" style="width: 45%;" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </td>
-                            </tr>
+                            else
+                            {
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>
+                                            <img src="~/Dassets/images/users/@item.CreatorUser.ImagePath" alt="" class="thumb-sm rounded mr-2">
+                                            @item.CreatorUser.Name @item.CreatorUser.Surname
+                                        </td>
+                                        <td>@item.StartTime</td>
+                                        <td>@item.EndTime</td>
+                                        @if (item.isActive)
+                                        {
 
-                            <tr>
-                                <td>Website &amp; Blog</td>
-                                <td>
-                                    <img src="assets/images/users/user-8.jpg" alt="" class="thumb-sm rounded mr-2">
-                                    Phillip T. Morse
-                                </td>
-                                <td>8/4/2020</td>
-                                <td>2/6/2020</td>
-                                <td><span class="badge badge-md badge-boxed  badge-soft-danger">Complete</span></td>
-                                <td>
-                                    <small class="float-right ml-2 pt-1 font-10">100%</small>
-                                    <div class="progress mt-2" style="height:3px;">
-                                        <div class="progress-bar  bg-pink" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </td>
-                            </tr>
+                                            <td><span class="badge badge-md badge-boxed  badge-soft-success">Aktif</span></td>
+                                        }
+                                        else
+                                        {
+                                            <td><span class="badge badge-md badge-boxed  badge-soft-danger">Pasif</span></td>
+                                        } 
+                                        <td>@item.Participants.Count</td>
+                                        <td class="text-center">
+                                            <div class="dropdown d-inline-block">
+                                                <a class="dropdown-toggle arrow-none" id="dLabel11" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                                                    <i class="las la-ellipsis-v font-20 text-muted"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel11">
+                                                    @{
+                                                        var u = Model.FirstOrDefault(z => z.Participants.Exists(z => z.AppUserId == Guid.Parse(User.Claims.FirstOrDefault(z => z.Type == "Id").Value)));
+                                                    }
+                                                    @if (item.isActive && u is not null)
+                                                    {
+                                                        <a class="dropdown-item" href="javascript: void(0);" data-toggle="modal" data-target="#addFile" onclick="addInventoryFile('@item.Id')">Envanter Ekle</a>
+                                                        <a class="dropdown-item" asp-controller="Home" asp-action="InventoryDetail" asp-route-InventoryId="@item.Id">Toplantıdan Ayrıl</a>
+                                                    }
+                                                    else if (item.isActive)
+                                                    {
+                                                        <a class="dropdown-item" asp-controller="Dashboard" asp-action="AddUserToMeeting" asp-route-meetId="@item.Id">Toplantıya Katıl</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a class="dropdown-item text-muted">İşlem yapılamaz</a>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
                         </tbody>
                     </table>
 
@@ -148,3 +94,47 @@
         </div><!--end card-->
     </div><!--end col-->
 </div><!--end row-->
+<div class="modal fade" id="addFile" tabindex="-1" role="dialog" aria-labelledby="ModalDefaultLogin" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title m-0" id="ModalDefaultLogin">Dosya Ekle</h6>
+                <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="la la-times"></i></span>
+                </button>
+            </div><!--end modal-header-->
+            <div class="modal-body">
+                <div class="card-title">
+                    <p>50 MB a kadar dosya yükleyebilirsiniz.</p>
+                </div>
+                <div class="card-body">
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div class="tab-pane p-3 pt-3 active" id="LogIn_Tab" role="tabpanel">
+                            <form class="form-horizontal auth-form my-4" asp-action="AddFileToInventory" asp-controller="Home" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="InventoryId" id="InventoryId" />
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <input type="file" id="input-file-now" name="file" class="dropify" />
+                                            </div><!--end card-body-->
+                                        </div><!--end card-->
+                                    </div><!--end col-->
+                                </div>
+                                <div class="form-group mb-0 row">
+                                    <div class="col-12 mt-2">
+                                        <button class="btn btn-primary btn-block waves-effect waves-light" type="submit">Dosya Ekle <i class="fas fa-plus"></i></button>
+                                    </div><!--end col-->
+                                </div> <!--end form-group-->
+                            </form><!--end form-->
+                        </div>
+                    </div>
+                </div><!--end card-body-->
+
+            </div><!--end modal-body-->
+
+        </div><!--end modal-content-->
+    </div><!--end modal-dialog-->
+</div>

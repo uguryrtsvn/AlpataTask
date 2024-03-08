@@ -39,10 +39,12 @@ namespace AlpataDAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatorUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    isActive = table.Column<bool>(type: "bit", nullable: false),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Description = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -54,6 +56,12 @@ namespace AlpataDAL.Migrations
                         column: x => x.AppUserId,
                         principalTable: "AppUsers",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Meetings_AppUsers_CreatorUserId",
+                        column: x => x.CreatorUserId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -77,15 +85,49 @@ namespace AlpataDAL.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "MeetingParticipants",
+                columns: table => new
+                {
+                    AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MeetingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MeetingParticipants", x => new { x.AppUserId, x.MeetingId });
+                    table.ForeignKey(
+                        name: "FK_MeetingParticipants_AppUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MeetingParticipants_Meetings_MeetingId",
+                        column: x => x.MeetingId,
+                        principalTable: "Meetings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Inventories_MeetingId",
                 table: "Inventories",
                 column: "MeetingId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MeetingParticipants_MeetingId",
+                table: "MeetingParticipants",
+                column: "MeetingId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Meetings_AppUserId",
                 table: "Meetings",
                 column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Meetings_CreatorUserId",
+                table: "Meetings",
+                column: "CreatorUserId");
         }
 
         /// <inheritdoc />
@@ -93,6 +135,9 @@ namespace AlpataDAL.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Inventories");
+
+            migrationBuilder.DropTable(
+                name: "MeetingParticipants");
 
             migrationBuilder.DropTable(
                 name: "Meetings");

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlpataBLL.Services.Validations.AuthDtos
+namespace AlpataBLL.Validations.AuthDtos
 {
     public class LoginDtoValidator : AbstractValidator<LoginDto>
     {

@@ -4,17 +4,22 @@ using AlpataUI.Helpers.FileUploadHelper;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Newtonsoft.Json;
 using NToastNotify;
 using System.Net;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+// Add services to the container.
+
+
 builder.Services.AddRazorPages().AddNToastNotifyNoty(new NotyOptions
 {
     ProgressBar = true,
     Timeout = 3000,
 });
-builder.Services.AddResponseCompression();
-// Add services to the container.
+builder.Services.AddResponseCompression(); 
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
 {
     options.Cookie.Name = "Auth";
@@ -46,6 +51,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         }
     };
 });
+
 #region HttpClient
 builder.Services
     .AddHttpClient<IAlpataClient, AlpataClient>()
@@ -59,8 +65,10 @@ builder.Services.AddScoped<IFileUploadService, FileUploadService>();
 builder.Services.AddValidatorsFromAssemblyContaining<IFluentValidator>().AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 #endregion
 
-builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
-
+builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation().AddJsonOptions(options =>
+{ 
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
  
 var app = builder.Build();
 

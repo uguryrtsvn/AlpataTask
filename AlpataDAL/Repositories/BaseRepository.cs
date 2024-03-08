@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace AlpataDAL.Repositories
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity,new ()
+    public class BaseRepository<T> : IBaseRepository<T> where T : class,new ()
     {
         private readonly AlpataDbContext db;
         protected readonly IMapper? _mapper;
@@ -29,8 +29,7 @@ namespace AlpataDAL.Repositories
         }
 
         public async Task<bool> CreateAsync(T entity)
-        {
-            entity.CreatedTime = DateTime.Now;
+        { 
             await db.Set<T>().AddAsync(entity);
             return await db.SaveChangesAsync() > 0;
         }
