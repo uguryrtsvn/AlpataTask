@@ -59,6 +59,7 @@ namespace AlpataBLL.Utilities.Security.Jwt
             {
                 new(ClaimTypes.Name, string.Join(' ', user.Name, user.Surname)),
                 new("Id", user.Id.ToString()),
+                new("ImagePath", user.ImagePath),
                 new(ClaimTypes.Email, user?.Email ?? string.Empty)
             };
 

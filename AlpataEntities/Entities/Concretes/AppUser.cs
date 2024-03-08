@@ -11,10 +11,6 @@ namespace AlpataEntities.Entities.Concretes
 {
     public class AppUser : BaseEntity
     {
-        public AppUser()
-        {
-            Meetings = new HashSet<Meeting>();
-        }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Phone { get; set; }
@@ -26,7 +22,5 @@ namespace AlpataEntities.Entities.Concretes
         public bool EmailConfirmed { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }   
-        public ICollection<Meeting> Meetings { get; set; } 
-
     }
 }

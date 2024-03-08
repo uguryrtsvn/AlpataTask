@@ -17,7 +17,7 @@ namespace AlpataBLL.Services.Base
 {
     public abstract class BaseService<T> : IBaseService<T> where T : class, IBaseEntity, new()
     {
-        protected readonly IMapper _mapper;
+        public readonly IMapper _mapper;
          
         protected readonly IBaseRepository<T> _entityRepository;
         public BaseService(IBaseRepository<T> entityRepository, IMapper mapper)
@@ -39,6 +39,13 @@ namespace AlpataBLL.Services.Base
                 new SuccessDataResult<T>(getResult, Messages.Found) :
                 new ErrorDataResult<T>(Messages.NotFound);
         }
-
+        public virtual async Task<IDataResult<List<TResult>>> GetAllAsync<TResult>(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, int skip = 0, int take = 0, bool ignoreQueryFilters = false)
+           where TResult : class, new()
+        {
+            List<TResult>? getAllResult = await _entityRepository.GetAllAsync<TResult>(filter, orderBy, skip, take, ignoreQueryFilters);
+            return getAllResult != null ?
+                new SuccessDataResult<List<TResult>>(getAllResult, Messages.ListSuccess) :
+                new ErrorDataResult<List<TResult>>(Messages.ListFailed);
+        }
     }
 }

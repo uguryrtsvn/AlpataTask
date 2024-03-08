@@ -12,6 +12,7 @@ namespace AlpataBLL.Services.Abstracts
 {
     public interface IMeetingService : IBaseService<Meeting>
     {
-        Task<IDataResult<MeetingDto?>> GetMeetingWithId(Guid id); 
+        Task<IDataResult<MeetingDto?>> GetMeetingWithId(Guid id);
+        Task<IDataResult<List<MeetingDto>>> GetAllAsync();
     }
 }

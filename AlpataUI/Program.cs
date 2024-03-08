@@ -61,6 +61,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<IFluentValidator>().AddFlue
 
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
+ 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -83,7 +84,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.UseNToastNotify();
+app.UseNToastNotify(); 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

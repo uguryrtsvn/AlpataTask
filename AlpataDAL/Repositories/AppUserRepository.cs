@@ -2,6 +2,7 @@
 using AlpataDAL.IRepositories;
 using AlpataDAL.Repositories;
 using AlpataEntities.Entities.Concretes;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace AlpataDAL.Repositories
     public class AppUserRepository : BaseRepository<AppUser>, IAppUserRepository
     {
         AlpataDbContext _db;
-        public AppUserRepository(AlpataDbContext db) : base(db)
+        public AppUserRepository(AlpataDbContext db, IMapper mapper) : base(db, mapper)
         {
             _db = db;
         }

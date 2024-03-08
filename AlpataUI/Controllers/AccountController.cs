@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using AlpataUI.Helpers.ClientHelper;
 using AlpataUI.Helpers.FileUploadHelper;
 using AlpataBLL.BaseResult.Concretes;
+using System.Text;
 
 namespace AlpataUI.Controllers
 {
@@ -38,8 +39,7 @@ namespace AlpataUI.Controllers
             var loginResult = await _alpataClient.Action<Token, LoginDto>("Account/Login", loginAuthDto);
             if (loginResult.Success)
             {
-                await SignInUser(loginResult.Data, loginAuthDto.RememberMe);
-
+                await SignInUser(loginResult.Data, loginAuthDto.RememberMe); 
                 JwtSecurityToken token = HandleJwtToken(loginResult.Data);
 
                 if (!string.IsNullOrWhiteSpace(returnUrl))
@@ -104,7 +104,8 @@ namespace AlpataUI.Controllers
                 new("TokenExp", token.Expiration.ToLongDateString()),
                 new(ClaimTypes.Name, jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name).Value),
                 new("Id", jwtToken.Claims.FirstOrDefault(claim => claim.Type == "Id")?.Value),
-                new(ClaimTypes.Email, jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email).Value)
+                new(ClaimTypes.Email, jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email).Value),
+                new("ImagePath", jwtToken.Claims.FirstOrDefault(claim => claim.Type =="ImagePath").Value)
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

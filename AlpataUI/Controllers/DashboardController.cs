@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AlpataEntities.Dtos.AuthDtos;
+using AlpataEntities.Dtos.MeetingDtos;
+using AlpataUI.Helpers.ClientHelper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
 using System.Security.Claims;
@@ -9,15 +12,17 @@ namespace AlpataUI.Controllers
     public class DashboardController : Controller
     {
         readonly IToastNotification _toastNotification;
-
-        public DashboardController(IToastNotification toastNotification)
+        readonly IAlpataClient _alpataClient;
+        public DashboardController(IToastNotification toastNotification, IAlpataClient alpataClient)
         {
             _toastNotification = toastNotification;
+            _alpataClient = alpataClient;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            _toastNotification.AddInfoToastMessage($"Hoşgeldin {User.Claims.FirstOrDefault(z => z.Type == ClaimTypes.Name).Value}");
-            return View();
+            var list = await _alpataClient.GetNoRoot<List<MeetingDto>>("Meeting/GetAll");
+            return View(list.Data);
         }
+        public IActionResult CreateMeeting() =>View();
     }
 }

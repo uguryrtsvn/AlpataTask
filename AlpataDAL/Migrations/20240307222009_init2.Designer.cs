@@ -4,6 +4,7 @@ using AlpataDAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AlpataDAL.Migrations
 {
     [DbContext(typeof(AlpataDbContext))]
-    partial class AlpataDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240307222009_init2")]
+    partial class init2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,9 +43,6 @@ namespace AlpataDAL.Migrations
                     b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("MeetingId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -68,8 +68,6 @@ namespace AlpataDAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MeetingId");
 
                     b.ToTable("AppUsers");
                 });
@@ -126,21 +124,11 @@ namespace AlpataDAL.Migrations
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("isActive")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatorUserId");
 
                     b.ToTable("Meetings");
-                });
-
-            modelBuilder.Entity("AlpataEntities.Entities.Concretes.AppUser", b =>
-                {
-                    b.HasOne("AlpataEntities.Entities.Concretes.Meeting", null)
-                        .WithMany("Participants")
-                        .HasForeignKey("MeetingId");
                 });
 
             modelBuilder.Entity("AlpataEntities.Entities.Concretes.Inventory", b =>
@@ -157,7 +145,7 @@ namespace AlpataDAL.Migrations
             modelBuilder.Entity("AlpataEntities.Entities.Concretes.Meeting", b =>
                 {
                     b.HasOne("AlpataEntities.Entities.Concretes.AppUser", "CreatorUser")
-                        .WithMany()
+                        .WithMany("Meetings")
                         .HasForeignKey("CreatorUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -165,11 +153,14 @@ namespace AlpataDAL.Migrations
                     b.Navigation("CreatorUser");
                 });
 
+            modelBuilder.Entity("AlpataEntities.Entities.Concretes.AppUser", b =>
+                {
+                    b.Navigation("Meetings");
+                });
+
             modelBuilder.Entity("AlpataEntities.Entities.Concretes.Meeting", b =>
                 {
                     b.Navigation("Inventories");
-
-                    b.Navigation("Participants");
                 });
 #pragma warning restore 612, 618
         }
