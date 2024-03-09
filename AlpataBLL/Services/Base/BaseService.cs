@@ -78,5 +78,17 @@ namespace AlpataBLL.Services.Base
                 return result;
             }
         }
+
+        public async Task<IDataResult<bool>> DeleteAsync(T dto)
+        {
+           var result = await _entityRepository.DeleteAsync(dto);
+            return result ? new SuccessDataResult<bool>(true) : new ErrorDataResult<bool>(false);
+        }
+
+        public async Task<IDataResult<bool>> UpdateAsync(T dto)
+        {
+            var result = await _entityRepository.UpdateAsync(dto);
+            return result ? new SuccessDataResult<bool>(true) : new ErrorDataResult<bool>(false);
+        }
     }
 }

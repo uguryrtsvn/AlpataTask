@@ -13,7 +13,15 @@ namespace AlpataBLL.Profiles
     {
         public MeetingProfile()
         {
-            CreateMap<Meeting,MeetingDto>().ReverseMap();
+            CreateMap<Meeting, MeetingDto>().ReverseMap()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember, destMember, context) =>
+                                                         {
+                                                             if (srcMember is Guid guidValue)
+                                                             {
+                                                                 return guidValue != Guid.Empty;
+                                                             }
+                                                             return srcMember != null;
+                                                         }));
         }
     }
 }

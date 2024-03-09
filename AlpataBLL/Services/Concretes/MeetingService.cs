@@ -37,6 +37,12 @@ namespace AlpataBLL.Services.Concretes
         {
             var meet = _mapper.Map<MeetingDto>(await _meetingRepository.GetAsync(filter: x => x.Id == id, includes: z => z.Include(c => c.Inventories).Include(a => a.Participants).Include(x => x.CreatorUser)));
             return meet != null ? new SuccessDataResult<MeetingDto>(meet, meet?.Name) : new ErrorDataResult<MeetingDto>(meet, "Toplantı bulunamadı.");
+        }     
+        
+        public async Task<IDataResult<List<MeetingDto>>> GetOrganizedMeetings(Guid id)
+        {
+            var meet = _mapper.Map<List<MeetingDto>>(await _meetingRepository.GetAllAsync(filter: x => x.CreatorUserId == id, includes: z => z.Include(a => a.Participants).Include(x => x.CreatorUser)));
+            return meet != null ? new SuccessDataResult<List<MeetingDto>>(meet,Messages.ListSuccess) : new ErrorDataResult<List<MeetingDto>>(meet, Messages.ListSuccess);
         }
         public async Task<IDataResult<List<MeetingDto>>> GetAllAsync()
         {
@@ -81,7 +87,7 @@ namespace AlpataBLL.Services.Concretes
             return new ErrorDataResult<bool>(mp);
             });
         }      
-        public async Task<IDataResult<bool>> DeleteUserToMeeting(Guid meetId, Guid userId)
+        public async Task<IDataResult<bool>> DeleteUserFromMeeting(Guid meetId, Guid userId)
         { 
            var result = await _participantRepository.DeleteAsync(await _participantRepository.GetAsync(z => z.MeetingId == meetId && z.AppUserId == userId));
            return result ? new SuccessDataResult<bool>(result) : new ErrorDataResult<bool>(result);

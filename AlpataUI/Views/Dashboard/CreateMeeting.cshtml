@@ -21,7 +21,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-lg-12">
-                        <form asp-action="EditMeeting" asp-controller="Dashboard">
+                        <form asp-action="CreateMeeting" asp-controller="Dashboard">
                             <div class="form-group">
                                 <label for="projectName">Toplantı Adı</label>
                                 <input type="text" class="form-control" asp-for="Name" placeholder="Toplantı adını giriniz.">
@@ -36,7 +36,7 @@
                                     </div><!--end col-->
                                     <div class="col-lg-6 col-3 mb-2 mb-lg-0">
                                         <label for="pro-end-date">Toplantı Bitiş Tarihi</label>
-                                        <input type="datetime-local" id="EndTime" asp-for="EndTime" value="@DateTime.Now.ToLongDateString()" class="form-control" placeholder="Tarih giriniz">
+                                        <input type="datetime-local" id="EndTime" asp-for="EndTime" class="form-control" placeholder="Tarih giriniz">
                                         <span asp-validation-for="EndTime"></span>
                                     </div><!--end col-->
 
@@ -62,8 +62,7 @@
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
     <script>
-        $(document).ready(function () {
-            var now = new Date();
+        $(document).ready(function () { 
             var formattedDateTime = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
             $('#StartTime').attr('min', formattedDateTime);
             $('#EndTime').attr('min', formattedDateTime);

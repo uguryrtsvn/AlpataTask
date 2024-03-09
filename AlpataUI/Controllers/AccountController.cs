@@ -11,9 +11,10 @@ using System.Globalization;
 using Microsoft.JSInterop;
 using Newtonsoft.Json;
 using AlpataUI.Helpers.ClientHelper;
-using AlpataUI.Helpers.FileUploadHelper;
 using AlpataBLL.BaseResult.Concretes;
 using System.Text;
+using AlpataUI.Models;
+using AlpataUI.Helpers.FileManagerHelper;
 
 namespace AlpataUI.Controllers
 {
@@ -21,9 +22,9 @@ namespace AlpataUI.Controllers
     {
         readonly IToastNotification _toastNotification;
         private readonly IAlpataClient _alpataClient;
-        private readonly IFileUploadService _fileUploadService;
+        private readonly IFileManager _fileUploadService;
 
-        public AccountController(IToastNotification toastNotification, IAlpataClient alpataClient, IFileUploadService fileUploadService)
+        public AccountController(IToastNotification toastNotification, IAlpataClient alpataClient, IFileManager fileUploadService)
         {
             _toastNotification = toastNotification;
             _alpataClient = alpataClient;
@@ -69,7 +70,7 @@ namespace AlpataUI.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterDto registerDto, IFormFile file)
         {
-            var setImage = await _fileUploadService.SaveFileAsync(file, FileStorageLocation.Local);
+            var setImage = await _fileUploadService.SaveFileAsync(new FileDto() { FormFile = file}, FileStorageLocation.Local);
             if (setImage.Success)
             {
                 registerDto.ImagePath = setImage.Message;

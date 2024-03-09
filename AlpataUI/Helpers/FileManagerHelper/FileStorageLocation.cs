@@ -1,4 +1,4 @@
-﻿namespace AlpataUI.Helpers.FileUploadHelper
+﻿namespace AlpataUI.Helpers.FileManagerHelper
 {
     public enum FileStorageLocation
     {

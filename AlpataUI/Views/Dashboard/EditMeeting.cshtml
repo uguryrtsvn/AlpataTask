@@ -2,10 +2,11 @@
 @{
     ViewData["Title"] = "EditMeeting";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    int counter = 0;
+    int counter = 1;
+    var meetId = @Model.Id.ToString();
 }
- 
-<div class="row mt-5">
+
+<div class="row mt-4">
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
@@ -32,7 +33,7 @@
                                     <td>@counter</td>
                                     <td>@item.FileName</td>
                                     <td class="text-right">
-                                        <a asp-action="DownloadFile" asp-controller="Home" asp-route-fileId="@item.Id"><i class="las la-download text-info font-18"></i></a>
+                                        <a asp-action="DownloadFile" asp-controller="DashBoard" asp-route-InvId="@item.Id"><i class="las la-download text-info font-18"></i></a>
                                         <a class="mr-2" data-toggle="modal" href="javascript= void(0);" data-target="#exampleModalSmall" onclick="DeleteFile('@item.Id')"><i class="las la-trash-alt text-danger font-18"></i></a>
                                     </td>
                                 </tr>
@@ -46,16 +47,14 @@
         </div><!--end card-->
     </div> <!-- end col -->
 </div>
-<div class="row mt-5">
+<div class="row mt-2">
     <div class="col-12">
         <div class="card">
             <div class="card-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h4 class="card-title">Toplantı Oluştur</h4>
-                        <p class="text-muted mb-0">Düzenlemek istediğiniz toplantıyı oluşturabilirsiniz.</p>
-                        <span class="badge badge-warning">Dikkat<i class="dripicons-warning ml-2"></i></span><span class="form-text text-danger font-12 mt-2"> Toplantıyı oluşturulduktan sonra listeden toplantınıza dosya ekleyebilirsiniz. <b>Başka toplantılara da katılım sağladıktan sonra yine dosya ekleyebilirsiniz.</b></span>
-                        <p class="text-secondary mb-0">Size ait toplantılar listede farklı renkte gözükecektir.</p>
+                        <h4 class="card-title">Toplantı Bilgileri</h4>
+                        <p class="text-muted mb-0">Toplantı bilgilerini buradan düzenleyebilirsiniz.</p>
                     </div><!--end col-->
                 </div>  <!--end row-->
             </div><!--end card-header-->
@@ -63,6 +62,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <form asp-action="EditMeeting" asp-controller="Dashboard">
+                            <input type="hidden" name="Id" value="@meetId" />
                             <div class="form-group">
                                 <label for="projectName">Toplantı Adı</label>
                                 <input type="text" class="form-control" asp-for="Name" placeholder="Toplantı adını giriniz.">
@@ -77,7 +77,7 @@
                                     </div><!--end col-->
                                     <div class="col-lg-6 col-3 mb-2 mb-lg-0">
                                         <label for="pro-end-date">Toplantı Bitiş Tarihi</label>
-                                        <input type="datetime-local" id="EndTime" asp-for="EndTime" value="@DateTime.Now.ToLongDateString()" class="form-control" placeholder="Tarih giriniz">
+                                        <input type="datetime-local" id="EndTime" asp-for="EndTime" class="form-control" placeholder="Tarih giriniz">
                                         <span asp-validation-for="EndTime"></span>
                                     </div><!--end col-->
 
@@ -90,7 +90,7 @@
                                 <span asp-validation-for="Description"></span>
                             </div><!--end form-group-->
 
-                            <button type="submit" class="btn btn-primary btn-sm" style="float:right !important">Toplantı Oluştur</button>
+                            <button type="submit" class="btn btn-primary btn-sm" style="float:right !important">Toplantıyı Düzenle</button>
                         </form>  <!--end form-->
                     </div><!--end col-->
 
@@ -114,11 +114,22 @@
             </div><!--end modal-body-->
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary btn-xs" data-dismiss="modal">Vazgeç</button>
-                <form asp-action="DeleteMeetingFile" asp-controller="Dashboard" method="post">
-                    <input type="hidden" id="fileId" name="fileId" />
+                <form asp-action="DeleteInventory" asp-controller="Dashboard" method="post">
+                    <input type="hidden" id="fileId" name="Id" />
+                    <input type="hidden" name="meetId" value="@meetId" />
                     <button type="submit" class="btn btn-danger btn-xs">Dosyayı Sil</button>
                 </form>
             </div><!--end modal-footer-->
         </div><!--end modal-content-->
     </div><!--end modal-dialog-->
 </div><!--end modal-->
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            var formattedDateTime = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+            $('#StartTime').attr('min', formattedDateTime);
+            $('#EndTime').attr('min', formattedDateTime); 
+        });
+    </script>
+}

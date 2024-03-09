@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlpataBLL.Validations.EntitiesDtos
+namespace AlpataBLL.Validations.EntitiyDtos
 {
-    public class MeetingDtoValidator:AbstractValidator<MeetingDto>
+    public class MeetingDtoValidator : AbstractValidator<MeetingDto>
     {
         public MeetingDtoValidator()
         {

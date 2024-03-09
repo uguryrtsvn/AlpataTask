@@ -15,6 +15,8 @@ namespace AlpataBLL.Services.Base
         Task<IDataResult<T>> GetAsync(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, int skip = 0, bool ignoreQueryFilters = false);
 
         Task<IDataResult<TResult>> CreateAsync<TResult>(TResult dto);
+        Task<IDataResult<bool>> DeleteAsync(T dto);
+        Task<IDataResult<bool>> UpdateAsync(T dto);
         Task<IDataResult<List<TResult>>> GetAllAsync<TResult>(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, int skip = 0, int take = 0, bool ignoreQueryFilters = false)
            where TResult : class, new();
     }

@@ -10,8 +10,7 @@ namespace AlpataEntities.Entities.Base
     {
         public BaseEntity()
         {
-            Id = Guid.NewGuid();
-            CreatedTime = DateTime.Now;
+            Id = Guid.NewGuid(); 
         }
         public Guid Id { get; set; }
         public DateTime? CreatedTime { get; set; }

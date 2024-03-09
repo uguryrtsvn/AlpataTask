@@ -15,14 +15,22 @@ namespace AlpataAPI.Controllers.V1
     public class MeetingController : BaseController
     {
         readonly IMeetingService _meetingService; 
+        readonly IMapper _mapper; 
         public MeetingController(IMeetingService meetingService, IMapper mapper)
         {
-            _meetingService = meetingService; 
+            _meetingService = meetingService;
+            _mapper = mapper;
         }
         [HttpGet]
-        public async Task<IActionResult> GetMeetingWithId(string Id)
+        public async Task<IActionResult> GetMeetingWithId(string meetId)
         {
-            var result = await _meetingService.GetMeetingWithId(Guid.Parse(Id));
+            var result = await _meetingService.GetMeetingWithId(Guid.Parse(meetId));
+            return result.Success ? Ok(result) : BadRequest(result);
+        }     
+        [HttpPost]
+        public async Task<IActionResult> GetOrganizedMeetings(string userId)
+        {
+            var result = await _meetingService.GetOrganizedMeetings(Guid.Parse(userId));
             return result.Success ? Ok(result) : BadRequest(result);
         }    
         [HttpGet]
@@ -32,9 +40,9 @@ namespace AlpataAPI.Controllers.V1
             return result.Success ? Ok(result) : BadRequest(result);
         }     
         [HttpGet]
-        public async Task<IActionResult> DeleteUserToMeeting(string meetId)
+        public async Task<IActionResult> DeleteUserFromMeeting(string meetId)
         {
-            var result = await _meetingService.DeleteUserToMeeting(Guid.Parse(meetId),parsedUserId);
+            var result = await _meetingService.DeleteUserFromMeeting(Guid.Parse(meetId),parsedUserId);
             return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpGet]
@@ -45,10 +53,21 @@ namespace AlpataAPI.Controllers.V1
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateMeeting(MeetingDto meeting)
+        public async Task<IActionResult> CreateMeeting(MeetingDto dto)
         {
-            meeting.CreatorUserId = Guid.Parse(userId);
-            var result = await _meetingService.CreateAsync(meeting);
+            dto.CreatorUserId = Guid.Parse(userId);
+            var result = await _meetingService.CreateAsync(dto);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }    
+        [HttpPost]
+        public async Task<IActionResult> EditMeeting(MeetingDto dto)
+        {
+            var meet =await _meetingService.GetAsync(z => z.Id == dto.Id);
+            meet.Data.StartTime = dto.StartTime;
+            meet.Data.EndTime = dto.EndTime;
+            meet.Data.Name =dto.Name;
+            meet.Data.Description = dto.Description;
+            var result =await  _meetingService.UpdateAsync(meet.Data);
             return result.Success ? Ok(result) : BadRequest(result);
         } 
     }

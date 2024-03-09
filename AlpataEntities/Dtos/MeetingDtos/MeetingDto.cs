@@ -15,7 +15,7 @@ namespace AlpataEntities.Dtos.MeetingDtos
             Participants = new();
         }
         public Guid Id { get; set; }
-        public Guid CreatorUserId { get; set; }
+        public Guid? CreatorUserId { get; set; }
         public AppUser? CreatorUser { get; set; }
         public string? Name { get; set; }
         public bool isActive { get; set; } = true;

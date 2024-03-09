@@ -2,4 +2,4 @@
 
 const AddInventoryFile = (InventoryId) => $("#meetId").val(InventoryId);
 
-const DeleteFile = (fileId) => $("#fileId").val(fileId);
+const DeleteFile = (fileId) => { debugger; $("#fileId").val(fileId) };
