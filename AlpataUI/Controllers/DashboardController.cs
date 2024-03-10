@@ -104,11 +104,11 @@ namespace AlpataUI.Controllers
 
         public async Task<IActionResult> OrganizedMeetings()
         {
-            var list = await _alpataClient.PostAsync<string, List<Meeting>>(User.Claims.First(z => z.Type == "Id").Value,"Meeting/GetOrganizedMeetings");
-            return null;
+            var list = await _alpataClient.GetNoRoot<List<MeetingDto>>("Meeting/GetOrganizedMeetings?Id="+ User.Claims.First(z => z.Type == "Id").Value);
+            return View(list.Data);
         }
 
-
+        [HttpGet]
         public async Task<IActionResult> EditMeeting(string meetId)
         {
             var result = await _alpataClient.GetNoRoot<MeetingDto>("Meeting/GetMeetingWithId?meetId=" + meetId);
@@ -130,7 +130,7 @@ namespace AlpataUI.Controllers
             return RedirectToAction("EditMeeting", new { meetId = dto.Id });
         }
         #endregion
-
+        [HttpGet]
         public async Task<IActionResult> DownloadFile(string InvId)
         {
             var result = await _alpataClient.GetNoRoot<Inventory>("Inventory/GetInventory?Id=" + InvId);
@@ -143,8 +143,21 @@ namespace AlpataUI.Controllers
                 }
             }
             _toastNotification.AddErrorToastMessage(result.Message);
-            return RedirectToAction("Index", "Dashboard");
-
+            return RedirectToAction("Index", "Dashboard"); 
         }
+        [HttpPost]
+        public async Task<IActionResult> DeleteMeeting(string Id)
+        {
+            var result = await _alpataClient.GetNoRoot<bool>("Meeting/DeleteMeeting?Id=" + Id);
+            if (result.Success)
+            {
+                _toastNotification.AddInfoToastMessage("Toplantı ve ilgili veriler silinmiştir.");
+                return RedirectToAction("OrganizedMeetings");
+            }
+
+            _toastNotification.AddErrorToastMessage(result.Message);
+            return RedirectToAction("OrganizedMeetings");
+        }
+
     }
 }

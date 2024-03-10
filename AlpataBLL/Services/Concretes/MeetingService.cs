@@ -21,16 +21,19 @@ namespace AlpataBLL.Services.Concretes
     public class MeetingService : BaseService<Meeting>, IMeetingService
     {
         readonly IMeetingRepository _meetingRepository;
-        readonly IAppUserRepository _userService;
+        readonly IAppUserRepository _userService; 
+        readonly IInventoryRepository _inventoryRepository;
         private readonly IEmailService _emailService;
         private readonly IMeetingParticipantRepository _participantRepository;
 
-        public MeetingService(IMeetingRepository meetingRepository, IMapper mapper, IAppUserRepository userService, IEmailService emailService, IMeetingParticipantRepository participantRepository) : base(meetingRepository, mapper)
+        public MeetingService(IMeetingRepository meetingRepository, IMapper mapper, IAppUserRepository userService, 
+                            IEmailService emailService, IMeetingParticipantRepository participantRepository, IInventoryRepository inventoryRepository) : base(meetingRepository, mapper)
         {
             _meetingRepository = meetingRepository;
             _userService = userService;
             _emailService = emailService;
-            _participantRepository = participantRepository;
+            _participantRepository = participantRepository; 
+            _inventoryRepository = inventoryRepository;
         }
 
         public async Task<IDataResult<MeetingDto>> GetMeetingWithId(Guid id)
@@ -92,6 +95,20 @@ namespace AlpataBLL.Services.Concretes
            var result = await _participantRepository.DeleteAsync(await _participantRepository.GetAsync(z => z.MeetingId == meetId && z.AppUserId == userId));
            return result ? new SuccessDataResult<bool>(result) : new ErrorDataResult<bool>(result);
         }
+        public async Task<IDataResult<bool>> DeleteTrunsactionAsync(Guid id)
+        {
+            var meet = await _meetingRepository.GetAsync(z => z.Id == id,includes: x=>x.Include(p=>p.Participants).Include(i=>i.Inventories));
+            var p = await _participantRepository.GetAllAsync(z => z.MeetingId == id);
+            var i = await _inventoryRepository.GetAllAsync(z=>z.MeetingId == id);
+           
+            return await RunTransaction<bool>(async () =>
+            {
+               var r2 = await _participantRepository.DeleteRangeAsync(p);
+               var r1 = await _inventoryRepository.DeleteRangeAsync(i);
+                var r = await _meetingRepository.DeleteAsync(await _meetingRepository.GetAsync(z => z.Id == id));
+                return r ? new SuccessDataResult<bool>(true) : new ErrorDataResult<bool>(false);
+            }); 
+        }
 
 
 
@@ -145,5 +162,7 @@ namespace AlpataBLL.Services.Concretes
 
             return htmlContent;
         }
+
+       
     }
 }

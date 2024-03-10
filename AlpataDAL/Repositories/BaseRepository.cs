@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace AlpataDAL.Repositories
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : class,new ()
+    public class BaseRepository<T> : IBaseRepository<T> where T : class, new()
     {
         private readonly AlpataDbContext db;
         protected readonly IMapper? _mapper;
-        public BaseRepository(AlpataDbContext db,IMapper mapper)
+        public BaseRepository(AlpataDbContext db, IMapper mapper)
         {
             _mapper = mapper;
             this.db = db;
@@ -29,16 +29,16 @@ namespace AlpataDAL.Repositories
         }
 
         public async Task<bool> CreateAsync(T entity)
-        { 
+        {
             await db.Set<T>().AddAsync(entity);
             return await db.SaveChangesAsync() > 0;
         }
 
         public async Task<bool> DeleteAsync(T entity)
-        { 
+        {
             db.Set<T>().Remove(entity);
             return await db.SaveChangesAsync() > 0;
-        } 
+        }
         public async Task<T?> GetAsync(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, Func<IQueryable<T>, IQueryable<T>>? selector = null, int skip = 0, bool ignoreQueryFilters = false)
         {
             IQueryable<T> query = db.Set<T>();
@@ -96,18 +96,24 @@ namespace AlpataDAL.Repositories
             if (orderBy != null) query = orderBy(query);
             if (skip > 0) query = query.Skip(skip);
             if (take > 0) query = query.Take(take);
-            query.AsNoTracking(); 
-            var mappedQuery = _mapper?.ProjectTo<TResult>(query); 
+            query.AsNoTracking();
+            var mappedQuery = _mapper?.ProjectTo<TResult>(query);
             return mappedQuery is null ? null : await mappedQuery.ToListAsync();
         }
         public async Task<bool> UpdateAsync(T entity)
-        { 
+        {
             db.Set<T>().Update(entity);
             return await db.SaveChangesAsync() > 0;
         }
 
         public async Task<bool> SaveChangesAsync()
         {
+            return await db.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> DeleteRangeAsync(List<T> listEntity)
+        {
+            db.Set<T>().RemoveRange(listEntity); 
             return await db.SaveChangesAsync() > 0;
         }
     }

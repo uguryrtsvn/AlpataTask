@@ -27,8 +27,8 @@ namespace AlpataAPI.Controllers.V1
             var result = await _meetingService.GetMeetingWithId(Guid.Parse(meetId));
             return result.Success ? Ok(result) : BadRequest(result);
         }     
-        [HttpPost]
-        public async Task<IActionResult> GetOrganizedMeetings(string userId)
+        [HttpGet]
+        public async Task<IActionResult> GetOrganizedMeetings(string Id)
         {
             var result = await _meetingService.GetOrganizedMeetings(Guid.Parse(userId));
             return result.Success ? Ok(result) : BadRequest(result);
@@ -69,6 +69,13 @@ namespace AlpataAPI.Controllers.V1
             meet.Data.Description = dto.Description;
             var result =await  _meetingService.UpdateAsync(meet.Data);
             return result.Success ? Ok(result) : BadRequest(result);
-        } 
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteMeeting(string Id)
+        {
+            var result = await _meetingService.DeleteTrunsactionAsync(Guid.Parse(Id));
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
     }
 }

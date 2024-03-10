@@ -1,0 +1,96 @@
+﻿@model IEnumerable<AlpataEntities.Dtos.MeetingDtos.MeetingDto>
+@{
+    ViewData["Title"] = "OrganizedMeetings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var uId = Guid.Parse(User.Claims.FirstOrDefault(z => z.Type == "Id")?.Value);
+}
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h4 class="card-title">Toplantılar</h4>
+                    </div><!--end col-->
+                    <div class="col-auto">
+                        <a asp-action="CreateMeeting" asp-controller="Dashboard" class="btn btn-sm btn-primary">Toplantı Oluştur</a>
+                    </div><!--end col-->
+                </div>  <!--end row-->
+            </div><!--end card-header-->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Toplandı Adı</th>
+                                <th>Düzenleyen</th>
+                                <th>Başlangıç Tarihi</th>
+                                <th>Bitiş Tarihi</th>
+                                <th>Katılımcı Sayısı</th>
+                                <th>Durumu</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model is null || Model.Count() == 0)
+                            {
+                                <span class="mb-5">Henüz düzenlenmiş bir toplantı yok.</span>
+                            }
+                            else
+                            {
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>
+                                            <img src="~/Dassets/images/users/@item.CreatorUser.ImagePath" alt="" class="thumb-sm rounded mr-2">
+                                            @item.CreatorUser.Name @item.CreatorUser.Surname
+                                        </td>
+                                        <td>@item.StartTime</td>
+                                        <td>@item.EndTime</td>
+                                        <td>@item.Participants.Count</td>
+                                        @if (item.isActive)
+                                        {
+                                            <td><span class="badge badge-md badge-boxed badge-soft-success">Aktif</span></td>
+                                        }
+                                        else
+                                        {
+                                            <td><span class="badge badge-md badge-boxed badge-soft-danger">Pasif</span></td>
+                                        }
+
+                                        <td name="buttons"><div class=" pull-right"><button id="bEdit" onclick="DirectMeetingDetail('@item.Id')" type="button" class="btn btn-sm btn-soft-success btn-circle mr-2"><i class="dripicons-pencil"></i></button><button id="bElim" type="button" class="btn btn-sm btn-soft-danger btn-circle" onclick="DeleteMeeting('@item.Id')" data-toggle="modal" href="javascript= void(0);" data-target="#exampleModalSmall"><i class="dripicons-trash" aria-hidden="true"></i></button></div></td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+                </div><!--end table-responsive-->
+            </div><!--end card-body-->
+        </div><!--end card-->
+    </div><!--end col-->
+</div><!--end row-->
+<div class="modal fade bd-example-modal-sm" id="exampleModalSmall" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title m-0" id="mySmallModalLabel">Toplantı Silinecek !</h6>
+                <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="la la-times"></i></span>
+                </button>
+            </div><!--end modal-header-->
+            <div class="modal-body text-center">
+                <h4 class="mb-1">UYARI !</h4>
+                <p class="mb-0 text-muted">Toplantı ve toplantıya ait envanterler silinecek. Eminmisiniz ?</p>
+            </div><!--end modal-body-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-xs" data-dismiss="modal">Vazgeç</button>
+                <form asp-action="DeleteMeeting" asp-controller="Dashboard" method="post">
+                    <input type="hidden" id="meetId" name="Id" /> 
+                    <button type="submit" class="btn btn-danger btn-xs">Toplantıyı Sil</button>
+                </form>
+            </div><!--end modal-footer-->
+        </div><!--end modal-content-->
+    </div><!--end modal-dialog-->
+</div><!--end modal-->
