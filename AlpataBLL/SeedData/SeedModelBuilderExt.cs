@@ -27,7 +27,9 @@ namespace AlpataDAL.SeedData
                 EmailConfirmed = true, 
                 CreatedTime = DateTime.Now,
                 PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt
+                PasswordSalt = passwordSalt,
+                ImagePath = "sdfsdf",
+                Phone = "12312312312"
             }; 
             context.Set<AppUser>().Add(user);
             context.SaveChanges(); 
