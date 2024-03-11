@@ -21,6 +21,7 @@ namespace AlpataEntities.Dtos.MeetingDtos
         public bool isActive { get; set; } = true;
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
+        public DateTime CreatedTime { get; set; }
         public string? Description { get; set; } 
         public virtual List<Inventory> Inventories { get; set; }
         public List<MeetingParticipant> Participants { get; set; }

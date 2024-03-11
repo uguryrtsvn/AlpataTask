@@ -50,6 +50,12 @@ namespace AlpataAPI.Controllers.V1
         {
             var result = await _meetingService.GetAllAsync();
             return result.Success ? Ok(result) : BadRequest(result);
+        }   
+        [HttpGet]
+        public async Task<IActionResult> GetFilteredMeetings(string q)
+        {
+            var result = await _meetingService.GetAllAsync<MeetingDto>(z=>z.Name.Contains(q)); 
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
         [HttpPost]

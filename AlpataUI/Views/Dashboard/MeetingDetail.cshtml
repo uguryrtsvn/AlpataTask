@@ -1,0 +1,89 @@
+﻿@model AlpataEntities.Dtos.MeetingDtos.MeetingDto
+@{
+    ViewData["Title"] = "Meeting Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int counter = 1;
+    var meetId = @Model.Id.ToString();
+}
+
+<div class="row mt-4">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">@Model.Name Toplantı Envanterleri</h4>
+                <p class="text-muted mb-0">
+                    Toplantı için yüklenmiş envanterleri buradan <span class="text-primary">indirebilirsiniz.</span>
+                </p>
+            </div><!--end card-header-->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Dosya Adı</th>
+                                @* <th>Oluşturulma Tarihi</th>*@
+                                <th class="text-right">İndir</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Inventories)
+                            {
+                                <tr>
+                                    <td>@counter</td>
+                                    <td>@item.FileName</td>
+                                    <td class="text-right">
+                                        <a asp-action="DownloadFile" asp-controller="DashBoard" asp-route-InvId="@item.Id"><i class="las la-download text-info font-18"></i></a> 
+                                    </td>
+                                </tr>
+                                counter++;
+                            }
+
+                        </tbody>
+                    </table><!--end /table-->
+                </div><!--end /tableresponsive-->
+            </div><!--end card-body-->
+        </div><!--end card-->
+    </div> <!-- end col -->
+</div>
+<div class="row mt-2">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h4 class="card-title">Toplantı Bilgileri</h4> 
+                    </div><!--end col-->
+                </div>  <!--end row-->
+            </div><!--end card-header-->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-5 offset-lg-1 align-self-center">
+                        <div class="p-5">
+                            <span class="bg-soft-primary p-2 rounded">Düzenleyen:</span>
+                            <h1 class="my-2 font-weight-bold">@Model.CreatorUser.Name <span class="text-primary">@Model.CreatorUser.Surname</span>.</h1>
+                            <h2 class="my-4 font-weight-bold">@Model.Name</h2>
+                            <span class="bg-soft-primary p-2 mt-2   rounded">Toplantı içeriği:</span>
+                            <p class="font-14 text-muted mt-2">
+                                @Model.Description
+                            </p>
+                            <p class="font-12"> Başlangıç saati: @Model.StartTime</p>
+                            <p class="font-12"> Bitiş saati: @Model.EndTime</p>
+                        </div>
+                    </div><!--end col-->
+                    <div class="col-lg-5 offset-lg-1 text-center">
+                        <div id="carouselExampleIndicators" class="carousel slide pointer-event" data-ride="carousel">
+                  
+                            <div class="carousel-inner"> 
+                                <div class="carousel-item active">
+                                    <img style="max-width:400px !important; max-height:auto !important;" src="~/Dassets/images/users/@Model.CreatorUser.ImagePath" class="d-block w-100" alt="...">
+                                </div>
+                            </div>
+                     
+                        </div>
+                    </div>
+                </div><!--end row-->
+            </div><!--end card-body-->
+        </div><!--end card-->
+    </div><!--end col-->
+</div>  

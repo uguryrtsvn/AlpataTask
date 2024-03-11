@@ -1,7 +1,7 @@
 ﻿@model AlpataEntities.Dtos.AuthDtos.RegisterDto
 @{
     Layout = "_HomeLayout";
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Kayıt";
 }
 @section Styles{
     <link href="~/Dassets/plugins/dropify/css/dropify.min.css" rel="stylesheet">
@@ -92,8 +92,9 @@
                                                 <h6 class="card-title">Profile Resmi Yükleyin</h6>
                                             </div><!--end card-header-->
                                             <div class="card-body">
-                                                <input type="file" id="input-file-now" name="file" class="dropify" accept="image/jpeg, image/png, image/jpg" required/>
+                                                <input type="file" id="input-file-now" name="file" class="dropify" accept="image/jpeg, image/png, image/jpg" required />
                                             </div><!--end card-body-->
+                                            <span class="field-validation-error" data-valmsg-for="file" data-valmsg-replace="true"></span>
                                         </div><!--end card-->
                                         <div class="form-group mb-0 row">
                                             <div class="col-12 mt-2">
@@ -101,7 +102,7 @@
                                             </div><!--end col-->
                                         </div> <!--end form-group-->
                                     </form><!--end form-->
-                                    <p class="mb-0 text-muted">Zaten hesabınız var mı?<a asp-controller="Home" asp-action="Login" class="text-primary ml-2">Giriş Yap</a></p>
+                                    <p class="mb-0 text-muted">Zaten hesabınız var mı?<a asp-controller="Account" asp-action="Login" class="text-primary ml-2">Giriş Yap</a></p>
                                 </div>
                             </div>
                         </div><!--end card-body-->

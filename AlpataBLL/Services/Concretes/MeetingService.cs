@@ -61,7 +61,7 @@ namespace AlpataBLL.Services.Concretes
                     await _meetingRepository.UpdateAsync(x);
                 }
             }
-            var result = _mapper.Map<List<MeetingDto>>(list.OrderByDescending(z => z.CreatedTime)); 
+            var result = _mapper.Map<List<MeetingDto>>(list.OrderByDescending(z => z.isActive).ThenByDescending(z=>z.CreatedTime)); 
             return result != null ? new SuccessDataResult<List<MeetingDto>>(result, Messages.ListSuccess) : new ErrorDataResult<List<MeetingDto>>(result, Messages.ListFailed);
         }
 

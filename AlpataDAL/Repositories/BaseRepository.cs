@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace AlpataDAL.Repositories
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : class, new()
+    public class BaseRepository<T> : IBaseRepository<T> where T :class, new()
     {
         private readonly AlpataDbContext db;
         protected readonly IMapper? _mapper;
@@ -29,7 +29,7 @@ namespace AlpataDAL.Repositories
         }
 
         public async Task<bool> CreateAsync(T entity)
-        {
+        { 
             await db.Set<T>().AddAsync(entity);
             return await db.SaveChangesAsync() > 0;
         }
@@ -57,24 +57,7 @@ namespace AlpataDAL.Repositories
             if (filter != null) query = query.Where(filter);
             return await query.AnyAsync();
         }
-        public async Task<TResult> GetFilteredFirstOrDefault<TResult>(Expression<Func<T, TResult>> selector, Expression<Func<T, bool>> expression, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> includes = null)
-        {
-            IQueryable<T> query = db.Set<T>();
-            if (includes != null) query = includes(query);
-            if (expression != null) query = query.Where(expression);
-            if (orderBy != null) return await orderBy(query).Select(selector).FirstOrDefaultAsync();
-            else return await query.Select(selector).FirstOrDefaultAsync();
-        }
-
-        public async Task<List<TResult>> GetFilteredList<TResult>(Expression<Func<T, TResult>> selector, Expression<Func<T, bool>> expression, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> includes = null, int limit = 0)
-        {
-            IQueryable<T> query = db.Set<T>();
-            if (includes != null) query = includes(query);
-            if (expression != null) query = query.Where(expression);
-            if (limit > 0) query = query.Take(limit);
-            if (orderBy != null) return await orderBy(query).Select(selector).ToListAsync();
-            else return await query.Select(selector).ToListAsync();
-        }
+ 
         public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, Func<IQueryable<T>, IQueryable<T>>? selector = null, int skip = 0, int take = 0, bool ignoreQueryFilters = false)
         {
             IQueryable<T> query = db.Set<T>();
@@ -96,7 +79,7 @@ namespace AlpataDAL.Repositories
             if (orderBy != null) query = orderBy(query);
             if (skip > 0) query = query.Skip(skip);
             if (take > 0) query = query.Take(take);
-            query.AsNoTracking();
+            query = query.AsNoTracking();
             var mappedQuery = _mapper?.ProjectTo<TResult>(query);
             return mappedQuery is null ? null : await mappedQuery.ToListAsync();
         }

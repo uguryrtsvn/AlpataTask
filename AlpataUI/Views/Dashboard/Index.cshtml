@@ -16,8 +16,15 @@
                     <div class="col">
                         <h4 class="card-title">Toplantılar</h4>
                     </div><!--end col-->
-                    <div class="col-auto">
-                        <a asp-action="CreateMeeting" asp-controller="Dashboard" class="btn btn-sm btn-primary">Toplantı Oluştur</a>
+                    <div class="col-auto"> 
+                        <div class="input-group">
+                            <span class="input-group-prepend">
+                                <span class="btn btn-secondary"><i class="fas fa-search"></i></span>
+                            </span>
+                            <input type="text" id="search" name="search" class="from-control" placeholder="Toplantı ara...">
+                            <a asp-action="CreateMeeting" asp-controller="Dashboard" class="btn btn-sm btn-primary">Toplantı Oluştur</a>
+
+                        </div>
                     </div><!--end col-->
                 </div>  <!--end row-->
             </div><!--end card-header-->
@@ -35,7 +42,7 @@
                                 <th>İşlemler</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="table">
                             @if (Model is null || Model.Count() == 0)
                             {
                                 <span class="mb-5">Henüz düzenlenmiş bir toplantı yok.</span>
@@ -74,7 +81,12 @@
                                                         if (item.Participants.Exists(z => z.AppUserId == uId))
                                                         {
                                                             <a class="dropdown-item" asp-controller="Dashboard" asp-action="DeleteUserFromMeeting" asp-route-meetId="@item.Id">Toplantıdan Ayrıl</a>
+                                                            <a class="dropdown-item" asp-controller="Dashboard" asp-action="MeetingDetail" asp-route-meetId="@item.Id">Toplantı Detayı</a>
                                                             <a class="dropdown-item" href="javascript: void(0);" data-toggle="modal" data-target="#addFile" onclick="AddInventoryFile('@item.Id')">Envanter Ekle</a>
+                                                            if (item.CreatorUserId == uId)
+                                                            {
+                                                                <a class="dropdown-item" asp-controller="Dashboard" asp-action="EditMeeting" asp-route-meetId="@item.Id">Toplantıyı Düzenle</a>
+                                                            }
                                                         }
                                                         else
                                                         {

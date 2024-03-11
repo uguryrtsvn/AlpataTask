@@ -1,4 +1,5 @@
-﻿using AlpataEntities.Dtos.AuthDtos;
+﻿using AlpataBLL.BaseResult.Concretes;
+using AlpataEntities.Dtos.AuthDtos;
 using AlpataEntities.Dtos.InventoryDtos;
 using AlpataEntities.Dtos.MeetingDtos;
 using AlpataEntities.Entities.Concretes;
@@ -7,12 +8,15 @@ using AlpataUI.Helpers.FileManagerHelper;
 using AlpataUI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using NToastNotify;
+using System.Collections.Generic;
 using System.Security.Claims;
 
 namespace AlpataUI.Controllers
 {
     [Authorize]
+    [EnableRateLimiting("fixed")]
     public class DashboardController : Controller
     {
         readonly IToastNotification _toastNotification;
@@ -117,6 +121,22 @@ namespace AlpataUI.Controllers
             _toastNotification.AddErrorToastMessage(result.Message);
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetFilteredMeetings(string q)
+        {
+            DataResult<List<MeetingDto>> list = new();
+            if (string.IsNullOrWhiteSpace(q))
+            {
+                list = await _alpataClient.GetNoRoot<List<MeetingDto>>("Meeting/GetAll"); 
+            }
+            else
+            {
+                list = await _alpataClient.GetNoRoot<List<MeetingDto>>("Meeting/GetFilteredMeetings?q="+q); 
+            }
+            return PartialView("~/Views/Shared/_Partials/_MeetListPartial.cshtml", list.Data);
+        }
+
         [HttpPost]
         public async Task<IActionResult> EditMeeting(MeetingDto dto)
         {
@@ -128,6 +148,16 @@ namespace AlpataUI.Controllers
             }
             _toastNotification.AddInfoToastMessage(result.Message);
             return RedirectToAction("EditMeeting", new { meetId = dto.Id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MeetingDetail(string meetId)
+        {
+            var result = await _alpataClient.GetNoRoot<MeetingDto>("Meeting/GetMeetingWithId?meetId=" + meetId);
+            if (result.Success) return View(result.Data);
+
+            _toastNotification.AddErrorToastMessage(result.Message);
+            return RedirectToAction("Index");
         }
         #endregion
         [HttpGet]

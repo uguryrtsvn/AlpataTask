@@ -7,6 +7,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection.Emit;
+using AlpataEntities.Entities.Base;
+using System.Threading;
 
 namespace AlpataDAL
 {
@@ -25,6 +27,26 @@ namespace AlpataDAL
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             base.OnModelCreating(builder);
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            SetBaseProperty(); 
+            return base.SaveChangesAsync(cancellationToken);
+        }
+        public override int SaveChanges()
+        {
+            SetBaseProperty();
+            return base.SaveChanges();
+        }
+
+        private void SetBaseProperty()
+        {
+            var entries = ChangeTracker.Entries<BaseEntity>();
+            foreach (var entry in entries)
+            {
+                if (entry.State == EntityState.Added) entry.Entity.CreatedTime = DateTime.Now;
+            }
         }
     }
 }

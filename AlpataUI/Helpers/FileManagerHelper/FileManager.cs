@@ -29,15 +29,12 @@ namespace AlpataUI.Helpers.FileManagerHelper
             {
                 return new ErrorDataResult<bool>(false, "Dosya boyutu 10 mb dan büyük olamaz.");
             }
-            switch (storageLocation)
+            return storageLocation switch
             {
-                case FileStorageLocation.Local:
-                    return await SaveFileToLocalAsync(file.FormFile);
-                case FileStorageLocation.Database:
-                    return await SaveFileToDatabaseAsync(file);
-                default:
-                    return new ErrorDataResult<bool>(false, "Geçersiz depolama konumu.");
-            }
+                FileStorageLocation.Local => await SaveFileToLocalAsync(file.FormFile),
+                FileStorageLocation.Database => await SaveFileToDatabaseAsync(file),
+                _ => new ErrorDataResult<bool>(false, "Geçersiz depolama konumu.")
+            };
         }
 
         private async Task<IDataResult<bool>> SaveFileToLocalAsync(IFormFile file)
@@ -110,16 +107,13 @@ namespace AlpataUI.Helpers.FileManagerHelper
                 return new ErrorDataResult<bool>(false, "Lütfen Dosya Belirtin");
             }
 
-            switch (storageLocation)
+            return storageLocation switch
             {
-                case FileStorageLocation.Local:
-                     return await DeleteFileFromLocal(fileName);
-                case FileStorageLocation.Database:
-                    return await DeleteFileFromDatabase(fileName);
-                default:
-                    return new ErrorDataResult<bool>(false, "Geçersiz depolama konumu.");
-            }
-            
+                FileStorageLocation.Local => await DeleteFileFromLocal(fileName),
+                FileStorageLocation.Database => await DeleteFileFromDatabase(fileName),
+                _ => new ErrorDataResult<bool>(false, "Geçersiz depolama konumu.")
+            };
+
         }
 
         private Task<IDataResult<bool>> DeleteFileFromDatabase(string fileName)

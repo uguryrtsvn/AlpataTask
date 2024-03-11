@@ -1,4 +1,5 @@
 using AlpataAPI.Extentions;
+using AlpataAPI.Extentions.SeriLog;
 using AlpataAPI.OpenApiOptions;
 using AlpataBLL;
 using AlpataBLL.DependencyResolvers;
@@ -23,7 +24,11 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.MSSqlServer;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Data;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -34,7 +39,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-});  
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -43,7 +48,7 @@ builder.Services.AddDbContext<AlpataDbContext>(opt => opt.UseSqlServer(builder.C
 #region Auto Mapper
 builder.Services.AddAutoMapper(typeof(IProfile));
 #endregion
- 
+
 #region Cors
 builder.Services.AddCors(options =>
     options.AddDefaultPolicy(builder =>
@@ -84,13 +89,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 #endregion
 
-#region API VERSIONING 
-//builder.Services.AddApiVersioning(setup =>
-//{   
-//    setup.DefaultApiVersion = new ApiVersion(1, 0);
-//    setup.AssumeDefaultVersionWhenUnspecified = true; 
-//    setup.ReportApiVersions = true; 
-//}).AddMvc();
+#region API VERSIONING  
 builder.Services.AddApiVersioning(opt =>
 {
     opt.DefaultApiVersion = new ApiVersion(1, 0);
@@ -108,12 +107,9 @@ builder.Services.AddVersionedApiExplorer(setup =>
 });
 #endregion
 #region Swagger 
-builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>(); 
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 builder.Services.AddSwaggerGen(options =>
-{ 
-    ////VERSION
-    //options.SwaggerDoc("v1", new OpenApiInfo { Title = "API WSVAP (WebSmartView)", Version = "v1" });
-    //options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First()); 
+{
 
     //JWT
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -152,11 +148,53 @@ builder.Services.AddValidatorsFromAssemblyContaining<IFluentValidator>().AddFlue
 builder.Services.AddDependencyResolvers(new BusinessModule());
 #endregion
 
-var app = builder.Build();
 
-// DB Strategy  //Db yoksa runtimede oluþup daha sonra proje ayaða kaldýrýlýr.
-using var scope = app.Services.CreateScope();
-scope.ServiceProvider.GetRequiredService<DbInitializer>().Run();
+
+//#region SeriLog
+//var columnOptions = new ColumnOptions
+//{
+//    AdditionalColumns = new[]
+//    {
+//        new SqlColumn
+//        {
+//            ColumnName = "UserId",
+//            DataType = SqlDbType.UniqueIdentifier,
+//            AllowNull = true
+//        }
+//    }
+//};
+//columnOptions.Store.Remove(StandardColumn.MessageTemplate);
+//Log.Logger = new LoggerConfiguration()
+//    .MinimumLevel.Override("AlpataDAL.AppDbContext", LogEventLevel.Information)
+//    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Error)
+//    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Error)
+//    .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Error)
+//    .MinimumLevel.Override("System.Net.Http", LogEventLevel.Error)
+//    .Enrich.FromLogContext()
+//    .WriteTo.MSSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+//        new MSSqlServerSinkOptions()
+//        {
+//            AutoCreateSqlTable = true,
+//            TableName = "ApiLogs",
+//            BatchPeriod = TimeSpan.FromSeconds(10),
+//            BatchPostingLimit = 1000
+//        },
+//        columnOptions: columnOptions).CreateLogger();
+//#endregion
+
+
+
+//
+builder.Services.AddHealthChecks();
+
+var app = builder.Build();
+app.MapHealthChecks("/Healthy");
+// DB Strategy  //Db yoksa runtimede oluþup daha sonra projeyi ayaða kaldýrýlýr.
+using (var scope = app.Services.CreateScope())
+{ 
+    scope.ServiceProvider.GetRequiredService<DbInitializer>().Run();
+}
+
 
 // Configure the HTTP request pipeline.
 
@@ -164,7 +202,7 @@ var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionD
 
 app.UseSwagger();
 app.UseSwaggerUI(options =>
-{  
+{
     foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
     {
         var url = $"/swagger/{description.GroupName}/swagger.json";
@@ -172,8 +210,12 @@ app.UseSwaggerUI(options =>
         options.SwaggerEndpoint(url, name.ToString());
     }
 });
-
 app.UseCors();
+
+
+#region  Exception Logger Middleware
+app.UseExceptionHandlingMiddleware();
+#endregion
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

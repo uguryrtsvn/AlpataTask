@@ -1,0 +1,24 @@
+# Build Stage
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+ 
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+WORKDIR /src
+COPY ["AlpataAPI/AlpataAPI.csproj","AlpataAPI/"]
+RUN dotnet restore "AlpataAPI/AlpataAPI.csproj"  
+
+COPY . .
+WORKDIR "src/AlpataAPI"
+RUN dotnet build "AlpataAPI.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "AlpataAPI.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "AlpataAPI.dll"]
+ 
+

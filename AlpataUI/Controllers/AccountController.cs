@@ -30,6 +30,13 @@ namespace AlpataUI.Controllers
             _alpataClient = alpataClient;
             _fileUploadService = fileUploadService;
         }
+        public IActionResult Register()
+        {
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Dashboard");
+            return View();
+        }
+        public IActionResult Login() => View();
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginDto loginAuthDto, string returnUrl)
@@ -41,8 +48,7 @@ namespace AlpataUI.Controllers
             if (loginResult.Success)
             {
                 await SignInUser(loginResult.Data, loginAuthDto.RememberMe);
-                JwtSecurityToken token = HandleJwtToken(loginResult.Data);
-
+                 
                 if (!string.IsNullOrWhiteSpace(returnUrl))
                 {
                     if (!returnUrl.StartsWith('/'))
@@ -55,7 +61,7 @@ namespace AlpataUI.Controllers
             _toastNotification.AddErrorToastMessage(loginResult.Message);
             ViewBag.returnUrl = returnUrl;
             ViewBag.Message = loginResult.Message;
-            return View("~/Views/Home/Login.cshtml", loginAuthDto);
+            return View(loginAuthDto);
         }
 
 
@@ -64,21 +70,21 @@ namespace AlpataUI.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             _toastNotification.AddInfoToastMessage("Çıkış yapıldı.");
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login");
         }
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterDto registerDto, IFormFile file)
-        {
-            var setImage = await _fileUploadService.SaveFileAsync(new FileDto() { FormFile = file}, FileStorageLocation.Local);
-            if (setImage.Success)
-            {
-                registerDto.ImagePath = setImage.Message;
+        { 
+            var imageResult = await _fileUploadService.SaveFileAsync(new FileDto() { FormFile = file}, FileStorageLocation.Local);
+            if (imageResult.Success)
+            { 
+                registerDto.ImagePath = imageResult.Message;
                 var result = await _alpataClient.Add(registerDto, "Account/Register");
                 if (result.Success)
                 {
                     _toastNotification.AddSuccessToastMessage(result.Message);
-                    return View("~/Views/Home/Login.cshtml", new LoginDto() { Email = registerDto.Email });
+                    return View("~/Views/Account/Login.cshtml", new LoginDto() { Email = registerDto.Email });
                 }
                 else
                 {
@@ -86,8 +92,8 @@ namespace AlpataUI.Controllers
                     await _fileUploadService.DeleteFileAsync(registerDto.ImagePath);
                 }
             }
-            _toastNotification.AddErrorToastMessage(setImage.Message);
-            return View("~/Views/Home/Index.cshtml", registerDto);
+            _toastNotification.AddErrorToastMessage(imageResult.Message);
+            return View(registerDto);
         }
 
         private JwtSecurityToken HandleJwtToken(Token token)
